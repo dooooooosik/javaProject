@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <!-- CSS 경로 수정 -->
+  <link rel="stylesheet" href="/css/signUpPage.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 뒤로가기 버튼 경로 수정 -->
+    <a href="/frontHTML/mainPage.html" class="back-link">← 메인으로 가기</a>
+
+    <!-- 회원가입 제목을 별도 div로 분리 -->
+    <div class="signup-header">
+      <h1 class="signup-title">회원가입</h1>
+    </div>
+
+    <!-- 회원가입 입력 박스 -->
+    <div class="signup-box">
+      <form id="signup-form"> <!-- form에 id 추가 -->
+        <div class="form-group">
+          <label for="email">이메일</label>
+          <input type="email" id="email" placeholder="이메일을 입력하세요" required>
+        </div>
+        <div class="form-group">
+          <label for="nickname">닉네임</label>
+          <input type="text" id="nickname" placeholder="사용할 닉네임" required>
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">비밀번호 확인</label>
+          <input type="password" id="confirm-password" required>
+        </div>
+        <button type="submit" class="signup-button">입력 완료</button>
+      </form>
+      <p class="login-text">
+        <!-- 로그인 경로 수정 -->
+        야호! 이미 계정이 있었네 <a href="/frontHTML/loginPage.html" class="login-link">로그인하러 가기</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- JavaScript 추가 -->
+  <script>
+    // 회원가입 폼 제출 처리
+    document.getElementById("signup-form").addEventListener("submit", async function(event) {
+      event.preventDefault(); // 기본 폼 제출 동작 막기
+
+      const email = document.getElementById("email").value;
+      const nickname = document.getElementById("nickname").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      // 비밀번호 확인
+      if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+
+      try {
+        // 서버로 회원가입 데이터 전송
+        const response = await fetch("http://127.0.0.1:3000/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, nickname, password }),
+        });
+
+        if (!response.ok) {
+          throw new Error("회원가입 실패: 서버 오류");
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("회원가입이 완료되었습니다!");
+          // 로그인 페이지로 이동
+          window.location.href = "/frontHTML/loginPage.html";
+        } else {
+          alert(data.message || "회원가입 중 오류가 발생했습니다.");
+        }
+      } catch (error) {
+        console.error("회원가입 중 오류 발생:", error);
+        alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
+      }
+    });
+  </script>
+</body>
+</html>

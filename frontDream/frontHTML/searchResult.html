@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 결과</title>
+  <link rel="stylesheet" href="/css/searchResult.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/frontHTML/mainPage.html">메인 페이지로 돌아가기</a>
+    </nav>
+    <h1>검색 결과</h1>
+  </header>
+  <main>
+    <section id="result-container">
+      <div id="result-message"></div>
+      <div id="result-items"></div>
+    </section>
+  </main>
+  <script>
+    // 임시 데이터
+    const mockData = [
+      { keyword: "똥", title: "똥 꿈 해몽", description: "똥 꿈은 재물운이 상승하는 길몽으로 해석됩니다." },
+      { keyword: "똥", title: "똥 치우는 꿈", description: "똥을 치우는 꿈은 불필요한 걱정과 문제가 해결됨을 의미합니다." },
+      { keyword: "고양이", title: "고양이 꿈 해몽", description: "고양이가 나오는 꿈은 친밀함과 독립심을 상징합니다." },
+      { keyword: "비행기", title: "비행기 꿈 해몽", description: "비행기 꿈은 새로운 시작과 모험을 나타냅니다." }
+    ];
+
+    // URL 파라미터에서 키워드 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const keyword = urlParams.get("keyword");
+
+    // 결과 컨테이너 요소
+    const resultContainer = document.getElementById("result-container");
+    const resultMessage = document.getElementById("result-message");
+    const resultItems = document.getElementById("result-items");
+
+    if (keyword) {
+      // 키워드와 일치하는 데이터 필터링
+      const filteredData = mockData.filter(item => item.keyword === keyword);
+
+      // 결과 표시
+      displayResults(filteredData, keyword);
+    } else {
+      resultMessage.innerHTML = "<p>키워드가 제공되지 않았습니다.</p>";
+    }
+
+    function displayResults(data, keyword) {
+      resultMessage.innerHTML = `<p>'${keyword}'에 대한 검색 결과입니다.</p>`;
+
+      if (data.length === 0) {
+        resultItems.innerHTML = "<p>검색 결과가 없습니다.</p>";
+        return;
+      }
+
+      data.forEach(item => {
+        const detailDiv = document.createElement("div");
+        detailDiv.classList.add("result-item");
+        detailDiv.innerHTML = `
+          <div class="result-title"><h3>${item.title}</h3></div>
+          <div class="result-description"><p>${item.description}</p></div>
+        `;
+        resultItems.appendChild(detailDiv);
+      });
+    }
+  </script>
+</body>
+</html>
