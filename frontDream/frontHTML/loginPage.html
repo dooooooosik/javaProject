@@ -8,7 +8,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- 뒤로가기 버튼 경로 수정 -->
     <a href="/frontHTML/mainPage.html" class="back-link">← 메인으로 가기</a><br>
     <div class="login-box">
       <h1 class="login-title">로그인</h1>
@@ -24,42 +23,51 @@
         <button type="submit" class="login-button">로그인</button>
       </form>
       <p class="signup-text">
-        <!-- 회원가입 링크 경로 수정 -->
         아직 회원가입을 안했다니 실망이야. <a href="/frontHTML/signUpPage.html" class="signup-link">회원가입하자</a>
       </p>
     </div>
   </div>
   <script>
-    // 테스트용 유저 데이터베이스
-    const users = [
-      { email: "user1@example.com", password: "password1" },
-      { email: "user2@example.com", password: "password2" }
-    ];
-
-    // 로그인 상태를 저장하는 전역 변수
-    let isLoggedIn = false;
-
     // 로그인 폼 처리
-    document.getElementById("login-form").addEventListener("submit", function(event) {
-      event.preventDefault(); // 폼 제출 기본 동작 막기
+    document.getElementById("login-form").addEventListener("submit", async function(event) {
+      event.preventDefault(); // 기본 폼 제출 동작 막기
 
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      // 입력한 이메일과 비밀번호 확인
-      const user = users.find(user => user.email === email && user.password === password);
+      try {
+        // 백엔드로 로그인 요청 전송
+        const response = await fetch("http://127.0.0.1:3000/api/login", {
+          method: "POST", // POST 요청
+          headers: {
+            "Content-Type": "application/json", // JSON 데이터 형식
+          },
+          body: JSON.stringify({
+            email: email, // 입력한 이메일
+            password: password, // 입력한 비밀번호
+          }),
+        });
 
-      if (user) {
-        alert("로그인 성공!");
-        isLoggedIn = true; // 로그인 상태 설정
+        if (!response.ok) {
+          // 응답 상태가 200이 아닌 경우
+          const errorData = await response.json();
+          alert(errorData.message || "로그인 실패!");
+          return;
+        }
 
-        // 로그인 상태를 로컬 스토리지에 저장
+        // 성공적인 응답 처리
+        const data = await response.json();
+        alert(data.message || "로그인 성공!");
+
+        // 로그인 상태 저장 (예: 토큰 저장)
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.token);
 
-        // 메인 페이지로 이동 (경로 수정)
+        // 메인 페이지로 이동
         window.location.href = "/frontHTML/mainPage.html";
-      } else {
-        alert("이메일 또는 비밀번호가 잘못되었습니다.");
+      } catch (error) {
+        console.error("로그인 요청 중 오류 발생:", error);
+        alert("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
       }
     });
   </script>
