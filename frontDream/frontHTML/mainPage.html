@@ -19,15 +19,15 @@
       <input type="text" id="search-input" placeholder="키워드를 입력하세요" />
     </div>
     <div class="card-container">
-      <div class="card">
+      <div class="card" onclick="goToCategoryPage('꿈 해몽')">
         <img src="../img/그림1.png" alt="꿈 해몽">
         <div class="card-title">꿈 해몽</div>
       </div>
-      <div class="card">
+      <div class="card" onclick="goToCategoryPage('꿈 이야기')">
         <img src="../img/그림2.png" alt="꿈 이야기">
         <div class="card-title">꿈 이야기</div>
       </div>
-      <div class="card">
+      <div class="card" onclick="goToCategoryPage('꿈 다이어리')">
         <img src="../img/그림3.png" alt="꿈 다이어리">
         <div class="card-title">꿈 다이어리</div>
       </div>
@@ -44,30 +44,33 @@
           return;
         }
 
-    // 검색 결과 페이지로 이동
+        // 검색 결과 페이지로 이동
         window.location.href = `../frontHTML/searchResult.html?keyword=${encodeURIComponent(keyword)}`;
       }
     });
+
+    // 카테고리 페이지로 이동
+    function goToCategoryPage(category) {
+      window.location.href = `../frontHTML/categoryPage.html?category=${encodeURIComponent(category)}`;
+    }
 
     // 로그인 컨테이너 업데이트 함수
     async function updateLoginState() {
       const loginContainer = document.getElementById("login-container");
       loginContainer.innerHTML = ""; // 기존 내용 초기화
 
-      // 로그인 상태 확인 (임시 테스트용, 서버 연결 시 fetch 사용)
       const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
       if (isLoggedIn) {
         const myPageLink = document.createElement("a");
         myPageLink.href = "/myPage";
         myPageLink.textContent = "마이페이지";
-        myPageLink.className = "login-button";
+        myPageLink.className = "top-bar-button"; // 통합된 클래스
         loginContainer.appendChild(myPageLink);
 
         const logoutButton = document.createElement("button");
         logoutButton.textContent = "로그아웃";
-        logoutButton.className = "logout-button";
-        logoutButton.style.marginLeft = "10px";
+        logoutButton.className = "top-bar-button"; // 통합된 클래스
         logoutButton.onclick = () => {
           localStorage.removeItem("isLoggedIn");
           window.location.href = "/frontHTML/mainPage.html";

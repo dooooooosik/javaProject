@@ -118,8 +118,10 @@ body {
   gap: 10px; /* 버튼 간격 */
 }
 
+/* 버튼 스타일 통합 */
 #login-container a, 
-#login-container button {
+#login-container button,
+.top-bar-button {
   font-size: 1rem;
   font-family: 'Gumi', sans-serif;
   padding: 10px 15px;
@@ -130,32 +132,11 @@ body {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  background-color: #501b9a; /* 진한 보라색 */
 }
 
-/* 로그인 버튼 색상 */
-#login-container a.login-button {
-  background-color: #501b9a;
-}
-
-#login-container a.login-button:hover {
-  background-color: #7E57C2;
-}
-
-/* 마이페이지 버튼 색상 */
-#login-container a.my-page-button {
-  background-color: #2196F3;
-}
-
-#login-container a.my-page-button:hover {
-  background-color: #64B5F6;
-}
-
-/* 로그아웃 버튼 색상 */
-#login-container button.logout-button {
-  background-color: #501b9a;
-  color: white;
-}
-
-#login-container button.logout-button:hover {
-  background-color: #7E57C2;
+#login-container a:hover, 
+#login-container button:hover,
+.top-bar-button:hover {
+  background-color: #7E57C2; /* 연한 보라색 */
 }
