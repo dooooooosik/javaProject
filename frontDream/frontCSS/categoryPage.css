@@ -1,0 +1,200 @@
+/* 1. RiaSans 글꼴 추가 */
+@font-face {
+  font-family: 'RiaSans';
+  src: url('./font/RiaSans-ExtraBold.ttf') format('truetype'),
+       url('./font/RiaSans-ExtraBold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gumi';
+  src: url('./font/GumiDotum.otf') format('opentype'),
+       url('./font/GumiDotum.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 공통 스타일 */
+html, body {
+  height: 95%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+  color: white;
+  text-align: center;
+
+  /* 컨테이너 중앙 배치 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white);
+  z-index: -1; /* 컨텐츠 뒤에 배치 */
+}
+
+.top-bar {
+  display: flex;
+  justify-content: center; /* 제목 가운데 정렬 */
+  width: 100%;
+  padding: 20px;
+  text-align: center; /* 텍스트 정렬 */
+}
+.title {
+  font-size: 2.5rem;
+  font-family: 'RiaSans', sans-serif;
+}
+
+/* 상단 버튼 컨테이너 */
+.user-menu {
+  position: absolute;
+  top: 20px; /* 메인 화면 기준 */
+  right: 20px; /* 메인 화면 기준 */
+  display: flex;
+  gap: 10px; /* 버튼 간격 동일 */
+}
+
+/* 버튼 스타일 통합 */
+.user-menu a,
+.user-menu button {
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #501b9a; /* 진한 보라색 */
+}
+
+.user-menu a:hover,
+.user-menu button:hover {
+  background-color: #7E57C2; /* 연한 보라색 */
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.search-container input {
+  width: 100%;
+  height: 3rem; /* 검색창 높이를 고정 */
+  padding: 0 1rem; /* 상하 패딩 제거, 좌우만 설정 */
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+}
+
+.search-container button {
+  margin-left: 1%;
+  height: 3rem; /* 검색 버튼 높이를 검색창과 동일하게 설정 */
+  padding: 0 1.5rem; /* 상하 패딩 제거, 좌우만 설정 */
+  border-radius: 1rem;
+  border: none;
+  background-color: #501b9a;
+  color: white;
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+  background-color: #7E57C2;
+}
+
+.category-container {
+  display: flex;
+  justify-content: center; /* 버튼 간격을 넓게 설정 */
+  gap: 5%; /* 버튼 간 여백을 추가로 확보 */
+  padding: 2%;
+  margin-top: 60px;
+  width: 100%; /* 컨테이너 너비를 유지 */
+}
+
+.category {
+  flex: 1;
+  max-width: 250px; /* 버튼의 최대 너비를 늘림 */
+  min-width: 200px; /* 버튼의 최소 너비 추가 */
+  padding: 1.8rem 2rem; /* 버튼 내부 여백 조정 */
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2rem;
+  font-family: 'Gumi', sans-serif;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.category-img {
+  font-size: 2.5rem;
+  font-family: 'Gumi', sans-serif;
+}
+
+.category-text {
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+}
+
+.category:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .category {
+    width: 30%;
+  }
+
+  .search-container input {
+    width: 60%;
+  }
+}
+
+@media (max-width: 768px) {
+  .category {
+    width: 45%;
+  }
+
+  .search-container input {
+    width: 70%;
+  }
+}
+
+@media (max-width: 480px) {
+  .category {
+    width: 90%;
+  }
+
+  .search-container input {
+    width: 80%;
+  }
+
+  .search-container button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
