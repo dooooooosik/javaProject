@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>행동과 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/actionCategory.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">행동과 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터를 여기 추가 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 제공된 사진의 꿈 데이터
+    const dreamData = [
+      {
+        title: "황단보다 간벌목에서 가던 길을 멈추고 서 있는 꿈",
+        description: "실행하는 일에 장애물이나 난관 및 방해자가 생기게 된다."
+      },
+      {
+        title: "군인이 행진을 하는 것을 보는 꿈",
+        description: "전략, 정책, 사업, 선전, 계획한 일 등이 잘 추진된다."
+      },
+      {
+        title: "부대가 군기를 앞세우고 행진하는 것을 보는 꿈",
+        description: "자신의 신변에 관한 일에 대해서 많은 사람들이 관심을 갖고 있다."
+      },
+      {
+        title: "저학문과 범상들이 행진하는 대열에 자신도 함께 섞여 가는 꿈",
+        description: "재물이 들어오고 명예나 신분이 높아진다."
+      },
+      {
+        title: "광대한 생각이나 사당, 누각, 궁성 위에 올라 한가로이 산책하는 꿈",
+        description: "지위와 권리가 올라가고 사업의 순조로운 발전과 명예, 직장, 지위의 안정, 융성 등 부귀가 따르게 된다."
+      },
+      {
+        title: "방황하고 있는 꿈",
+        description: "친한 사람과 다툼이 있고 계획한 일이 뜻대로 되지 않으며 갈등과 방황을 해야 한다."
+      },
+      {
+        title: "붉은 불꽃이나 밝은 빛이 나오는 꿈",
+        description: "집안에 행운이 깃들며 명예로운 일이 생긴다."
+      },
+      {
+        title: "높은 탑을 타고 올라가는 꿈",
+        description: "입신양명하고 출세하여 부귀를 거느리게 된다."
+      },
+      {
+        title: "군 제복을 입고 말을 타는 꿈",
+        description: "권위 있는 직책으로의 승진을 예고한다."
+      },
+      {
+        title: "금융 타고 길을 다니는 꿈",
+        description: "재물과 관련된 행운을 암시한다."
+      },
+      {
+        title: "아버지가 큰 말을 타고 잡아 끌어 들어오는 꿈",
+        description: "집안에 경사가 생기고 좋은 일이 있을 징조다."
+      },
+      {
+        title: "산의 소에게 잡혀 먹히는 꿈",
+        description: "생각지 못한 도움을 얻게 된다."
+      },
+      {
+        title: "독수리와 호랑이가 싸움을 하는 꿈",
+        description: "경쟁자를 물리치고 승리를 거머쥔다."
+      },
+      {
+        title: "상대방과 싸움을 하다가 상대를 쓰러뜨리는 꿈",
+        description: "지원한 경쟁 속에서 새로운 기회를 얻게 된다."
+      }
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>

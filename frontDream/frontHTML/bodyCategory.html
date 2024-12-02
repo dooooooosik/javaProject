@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신체와 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/bodyCategory.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">신체와 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터를 여기 추가 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+      {
+        title: "머리카락을 흉하게 듬성듬성 잘라내는 꿈",
+        description: "집안에 불화나 이별, 분산 등의 우환이 발생하게 된다."
+      },
+      {
+        title: "머리카락을 한데 묶어 매는 꿈",
+        description: "좋은 배필과 인연을 맺거나 귀인과의 교제가 성사되는 기쁨이 얻게 된다."
+      },
+      {
+        title: "머리카락이 수없이 빠지거나 희끗희끗한 반백이 되어버리는 꿈",
+        description: "손 안에서부터 일이나 자손과 연관된 근심 내지 손실이 발생하게 된다."
+      },
+      {
+        title: "계속해서 머리가 새거 산과 교체를 하는 꿈",
+        description: "점차 운이 많아지고 명예나 지위가 높아지는 등 분주한 가운데 이익과 발전이 따르게 된다."
+      },
+      {
+        title: "머리카락이 뒤엉키거나 흉하게 얼굴을 가리는 꿈",
+        description: "집안이나 직장에서 얽힌 일로 인해 고민 및 방황과 대인관계의 시끄러움을 암시하며 안 좋은 일이 발생할 가능성을 뜻한다."
+      },
+      {
+        title: "하체에 총탄이 박히는 꿈",
+        description: "상대방 세력에 침해되어 상대방에게 복종, 승락 등을 하게 된다."
+      },
+      {
+        title: "벌레가 종아리를 물어 피가 나는 꿈",
+        description: "재물과 돈이 생기고 뜻밖의 귀신이 나타나 식사대접을 해준다."
+      },
+      {
+        title: "몸의 힘줄을 드러내는 꿈",
+        description: "자존심과 명예를 실추하게 되는 꿈이다."
+      },
+      {
+        title: "여자가 무릎 안고 자는 꿈이나 비슷한 꿈",
+        description: "남녀 간의 사랑과 연관된 꿈이다."
+      },
+      {
+        title: "발꿈치 종아리가 붓는 꿈",
+        description: "여행과 건강이 악화되는 꿈이다."
+      },
+      {
+        title: "양 어깨가 쑤시고 아픈 꿈",
+        description: "가정과 직장이 고달프고 살맛이 나지 않는다."
+      },
+      {
+        title: "반딧불이 사람 어깨에 붙어 반짝거리는 꿈",
+        description: "좋은 일이 생길 징조의 꿈이다."
+      },
+      {
+        title: "어깨에 짐을 지고 힘들어 하는 꿈",
+        description: "일에 치이며 고통 받는 상황을 예고한다."
+      }
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>음식과 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/foodCategory.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">음식과 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터가 렌더링됩니다 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+      {
+        title: "삼계탕, 설렁탕, 갈비탕, 곰탕 등의 탕 종류의 음식을 먹는 꿈",
+        description: "특히 위장병과 장에 질환이 생긴다. 특히 내과에 발생하여 위독과 백혈이고 고생을 하게 된다."
+      },
+      {
+        title: "각종 찜, 튀김 등의 음식을 먹는 꿈",
+        description: "정신적 스트레스를 받으며 신경증, 관절염, 몸살 등의 질환이 생길 수 있다."
+      },
+      {
+        title: "보신탕을 밥상에 차려놓고 맛있게 먹는 꿈",
+        description: "역기능적인 질병이 발생하여 병원 신세를 져야 할 수도 있다."
+      },
+      {
+        title: "고추장 찌개 또는 짜장류를 넣은 음식을 먹는 꿈",
+        description: "충치나 잇몸 질환이 발생할 가능성이 높다."
+      },
+      {
+        title: "케이크를 먹는 꿈",
+        description: "성적인 욕망이 꿈틀거리고 있음을 나타낸다."
+      },
+      {
+        title: "크림, 젤, 꿀 등 물렁한 음식을 많이 먹는 꿈",
+        description: "정신적 또는 물질적 재물이 생긴다."
+      },
+      {
+        title: "빵에 꿀이나 크림을 발라 먹는 꿈",
+        description: "어떤 일을 다룸에 훌륭하게 만든다."
+      },
+      {
+        title: "집에서 샌드위치를 먹거나 만드는 꿈",
+        description: "자신의 실력을 더욱 기회가 곧 찾아오게 된다."
+      }
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>

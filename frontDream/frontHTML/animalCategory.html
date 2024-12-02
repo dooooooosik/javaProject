@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>동물와 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/animalCategory.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">동물과 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터를 여기 추가 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+      { title: "배설하는 소를 본 꿈", description: "부정을 하는 현장을 목격하게 된다." },
+      { title: "돼지 숫이 이마가 눈앞에 확 들어오는 꿈", description: "생각지도 않은 신의 축복으로 일확천금을 손에 거머쥐고 부자가 된다." },
+      { title: "소가 배설하는 것을 보는 꿈", description: "어떤 사람 또는 사업체의 입거래나 생산품의 수출 광경을 목격하고 공연히 불쾌해진다." },
+      { title: "돼지가 찾아와 무는 꿈", description: "귀신이나 재물을 얻게 된다." },
+      { title: "메밀밭에 돼지들이 꿀꿀거리는 꿈", description: "뜻밖의 횡재를 하여 집안 살림살이가 넉넉해지고 기쁨이 가득하다." },
+      { title: "염소에게 먹이를 주는 꿈", description: "친한 친구에게 배신당할 수 있다." },
+      { title: "닭이 변해 봉황새가 되는 꿈", description: "가난 속에서 어려움을 딛고 일어서서 당당히 입신양명하게 된다." },
+      { title: "까마귀가 길에서 싸우는 꿈", description: "의외의 탈상사나 재물 손실에 부딪치는 액화가 발생하게 된다." },
+      { title: "원앙새가 무리를 이루고 있다가 흩어져 날아가는 꿈", description: "배우자나 애인과의 이별이나 다툼이 발생할 징조이다." },
+      { title: "양에 관한 꿈", description: "선량한 사람, 신자, 교육자, 진리, 정신적 또는 물질적인 재물의 상징이다." },
+      { title: "사슴이 집 마당에 있는 꿈", description: "사슴은 신령님이 사랑을 받는 동물로서 행운의 상징이며, 명성과 재물 등의 소원이 이루어질 것이다." },
+      { title: "늑대를 따라 이리저리 다니는 꿈", description: "사기꾼에게 홀려 온종일 쓸데없이 헤매만 한다. 눈먼 장님, 실패가 생긴다." },
+      { title: "어느 집을 방문했을 때 개에게 물리는 꿈", description: "현재 자신이 하고 있는 일이 잘 풀리게 된다." }
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>
