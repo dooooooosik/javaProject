@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자연과 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/natureCategory.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">자연과 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터가 렌더링됩니다 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+  {
+    title: "해가 지붕 위에 떨어져 구르는 것을 본 꿈",
+    description: "태몽으로, 아이가 장차 위대한 작품, 연구성과 등으로 세상에 공헌할 사람이다."
+  },
+  {
+    title: "담배 연기가 무지개 빛으로 고와 보이는 꿈",
+    description: "훌륭한 문예작품을 감상하거나 동호인이 생긴다. 영화구경을 한다."
+  },
+  {
+    title: "하늘에 해가 두 개가 떠 있는 것을 보는 꿈",
+    description: "같은 성격의 군주, 정부, 기관체, 권리, 명예 등이 두 개 있음을 나타낸다."
+  },
+  {
+    title: "바람 옆에 두고 있는 꿈",
+    description: "훌륭한 배우자를 만나게 되고 그 진행 또한 순조롭다. 또는 귀하게 될 자녀를 임태한 태몽으로, 볼 수도 있다."
+  },
+  {
+    title: "이른 아침 가슴을 펴고 많은 공기를 마시는 꿈",
+    description: "봄날에 생명의 환희를 만끽하며 쾌활한 삶이 이루어진다. 사회적 지위 상승, 명예와 재물이 증가한다."
+  },
+  {
+    title: "폭포 위에 올라서 무지개가 떠 있는 꿈",
+    description: "사회적 발전으로 마음의 안정을 얻고 새로운 목표를 설정한다."
+  },
+  {
+    title: "연못이 말라 있는 꿈",
+    description: "회사의 재정 상태가 악화된다는 것을 나타낸다."
+  },
+  {
+    title: "짙은 안개가 주변을 감싸고 있는 꿈",
+    description: "현재 상황에 대한 혼란스러움과 계획의 부재를 나타낸다."
+  },
+  {
+    title: "맑은 연못에 무지개가 걸려 있는 꿈",
+    description: "깊은 학문과 진리를 탐구하게 된다. 학생은 학업 성적이 오르고 합격한다."
+  },
+  {
+    title: "길에 구덩이 있는 꿈",
+    description: "그것은 함정이므로 그곳에 빠지게 되면 경쟁에서 지게 된다."
+  },
+  {
+    title: "새벽이 되거나 동굴 등의 어두운 곳에서 나오는 꿈",
+    description: "입신양명하며 성공하게 될 길몽이다."
+  },
+  {
+    title: "천장이 무너진 구멍으로 새가 날아가는 것을 보는 꿈",
+    description: "과잉을 통해서 성취를 이루는 꿈이다. 성공의 가능성을 나타낸다."
+  },
+  {
+    title: "바람 위에 집을 짓는 꿈",
+    description: "실속 없고 위험한 사업에 투자하여 엄청난 손실을 가져오게 된다."
+  },
+  {
+    title: "폭포 위에서 목욕을 하거나 물이 갑자기 많아지는 꿈",
+    description: "작품 발표로 세상 사람들에게 큰 소문거리를 던진다."
+  },
+  {
+    title: "연못 중앙에 연꽃이 피어 있는 꿈",
+    description: "태몽의 경우, 귀하게 될 자식을 낳게 된다."
+  }
+];  
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>

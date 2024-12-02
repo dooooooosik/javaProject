@@ -62,11 +62,6 @@
       const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
       if (isLoggedIn) {
-        const myPageLink = document.createElement("a");
-        myPageLink.href = "/myPage";
-        myPageLink.textContent = "마이페이지";
-        myPageLink.className = "top-bar-button"; // 통합된 클래스
-        loginContainer.appendChild(myPageLink);
 
         const logoutButton = document.createElement("button");
         logoutButton.textContent = "로그아웃";
