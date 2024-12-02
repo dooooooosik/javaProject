@@ -38,31 +38,39 @@
     document.getElementById("search-input").addEventListener("keypress", function (event) {
       if (event.key === "Enter") {
         const keyword = event.target.value.trim();
-
+  
         if (!keyword) {
           alert("키워드를 입력해주세요.");
           return;
         }
-
+  
         // 검색 결과 페이지로 이동
         window.location.href = `../frontHTML/searchResult.html?keyword=${encodeURIComponent(keyword)}`;
       }
     });
-
+  
     // 카테고리 페이지로 이동
     function goToCategoryPage(category) {
-      window.location.href = `../frontHTML/categoryPage.html?category=${encodeURIComponent(category)}`;
+      if (category === "꿈 이야기") {
+        // "꿈 이야기" 클릭 시 communityPage.html로 이동
+        window.location.href = `../frontHTML/communityPage.html`;
+      } else if (category === "꿈 다이어리") {
+        // "꿈 다이어리" 클릭 시 diaryPage.html로 이동
+        window.location.href = `../frontHTML/diaryPage.html`;
+      } else {
+        // 다른 카테고리는 categoryPage.html로 이동
+        window.location.href = `../frontHTML/categoryPage.html?category=${encodeURIComponent(category)}`;
+      }
     }
-
+  
     // 로그인 컨테이너 업데이트 함수
     async function updateLoginState() {
       const loginContainer = document.getElementById("login-container");
       loginContainer.innerHTML = ""; // 기존 내용 초기화
-
+  
       const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
+  
       if (isLoggedIn) {
-
         const logoutButton = document.createElement("button");
         logoutButton.textContent = "로그아웃";
         logoutButton.className = "top-bar-button"; // 통합된 클래스
@@ -79,7 +87,7 @@
         loginContainer.appendChild(loginLink);
       }
     }
-
+  
     document.addEventListener("DOMContentLoaded", updateLoginState);
   </script>
 </body>
