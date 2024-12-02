@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>꿈 게시글 작성</title>
+  <link rel="stylesheet" href="/css/communityWrite.css">
+</head>
+<body>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+  </header>
+  <div class="top-bar">
+    <h1 class="title">오늘 내가 꾼 꿈은 ?</h1>
+  </div>
+
+  <main>
+    <div class="form-container">
+      <h2>새로운 게시글 작성하기</h2>
+      <form id="post-form">
+        <div class="tlqkf">
+          <label for="dream-content">꿈 내용</label>
+        </div>
+        <textarea id="dream-content" placeholder="게시글 내용을 작성하세요"></textarea>
+        <div>
+          <div class="tlqkf">
+            <label for="category">카테고리</label>
+          </div>
+          <select id="category">
+            <option value="" disabled selected>카테고리를 선택하세요</option>
+            <option value="신체">신체</option>
+            <option value="동물">동물</option>
+            <option value="음식">음식</option>
+            <option value="장소">장소</option>
+            <option value="인물">인물</option>
+            <option value="식물">식물</option>
+            <option value="행동">행동</option>
+            <option value="자연">자연</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <button type="button" id="submit-btn">작성 완료</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const authBtn = document.getElementById("auth-btn");
+
+      // 로그인 상태 확인
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn) {
+        authBtn.textContent = "로그아웃";
+        authBtn.addEventListener("click", () => {
+          localStorage.removeItem("isLoggedIn");
+          window.location.reload();
+        });
+      } else {
+        authBtn.textContent = "로그인";
+        authBtn.addEventListener("click", () => {
+          window.location.href = "/frontHTML/loginPage.html";
+        });
+      }
+
+      // 게시글 작성 처리
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.addEventListener("click", () => {
+        const content = document.getElementById("dream-content").value.trim();
+        const category = document.getElementById("category").value;
+
+        if (!content || !category) {
+          alert("모든 필드를 채워주세요.");
+          return;
+        }
+
+        // POST 요청 (API 연동, 주석 처리)
+        /*
+        fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, category }),
+        })
+          .then(response => {
+            if (!response.ok) throw new Error("게시글 작성 실패");
+            alert("게시글 작성 완료!");
+            window.location.href = "/frontHTML/communityPage.html";
+          })
+          .catch(error => console.error("API 호출 에러:", error));
+        */
+
+        // 임시 동작
+        alert("게시글 작성 완료!");
+        window.location.href = "/frontHTML/communityPage.html";
+      });
+    });
+  </script>
+</body>
+</html>
