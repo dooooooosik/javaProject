@@ -81,6 +81,17 @@
       { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", likes: 42, category: "자연" },
       { id: 3, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
       { id: 4, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 5, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
+      { id: 6, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
+      { id: 7, title: "좋은 날씨", content: "햇살이 좋아서 피크민이랑 산책했다.", likes: 42, category: "자연" },
+      { id: 8, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
+      { id: 9, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 10, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
+      { id: 11, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
+      { id: 12, title: "좋은 날씨", content: "눈이 내렸다. 진짜 많이.", likes: 42, category: "자연" },
+      { id: 13, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
+      { id: 14, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 15, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"}
     ];
 
     let currentPage = 1;
@@ -128,9 +139,9 @@
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
-      if (currentPage * postsPerPage < posts.length) {
+      const selectedCategory = document.getElementById("category-filter").value;
+      if (currentPage * postsPerPage < posts.filter((p) => selectedCategory === "all" || p.category === selectedCategory).length) {
         currentPage++;
-        const selectedCategory = document.getElementById("category-filter").value;
         renderPosts(currentPage, selectedCategory);
       }
     });
