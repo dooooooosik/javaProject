@@ -38,6 +38,16 @@
     flex-direction: column;
     margin-top: 50px;
   }
+
+  .back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+  }
   
   .top-bar {
     justify-content: center;

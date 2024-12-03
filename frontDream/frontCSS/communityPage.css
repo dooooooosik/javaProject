@@ -27,6 +27,21 @@
     align-items: center;
     padding: 20px;
   }
+  main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+  }
 
   .top-bar {
     justify-content: center; /* 제목 가운데 정렬 */
@@ -63,6 +78,31 @@
     transition: background-color 0.3s ease;
     background-color: #501b9a; /* 진한 보라색 */
   }
+
+  .filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70rem;
+    margin: 0px 36.5px 10px 36.5px;
+  }
+  
+  #category-filter {
+    background-color: #501b9a;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    transition: background-color 0.3s ease;
+  }
+  
+  #category-filter:hover {
+    background-color: #7E57C2;
+  }
+
   .tlqkf {
     display: flex;
     flex-direction: column;
@@ -73,22 +113,20 @@
   }
   
   #write-post-btn {
-    background-color: #501b9a;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px; /* 게시글과의 간격을 넓힘 */
-    padding: 10px 20px;
-    font-size: 1rem;
-    font-family: 'Gumi', sans-serif;
-    align-self: flex-end; /* 오른쪽 정렬 */
-  }
-  
-  #write-post-btn:hover {
-    background-color: #7E57C2;
-  }
+  background-color: #501b9a;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+#write-diary-btn:hover {
+  background-color: #7E57C2;
+}
   
   .top-bar-button {
     font-size: 1rem;
