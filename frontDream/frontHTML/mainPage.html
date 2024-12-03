@@ -51,10 +51,16 @@
   
     // 카테고리 페이지로 이동
     function goToCategoryPage(category) {
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  
       if (category === "꿈 이야기") {
         // "꿈 이야기" 클릭 시 communityPage.html로 이동
         window.location.href = `../frontHTML/communityPage.html`;
       } else if (category === "꿈 다이어리") {
+        if (!isLoggedIn) {
+          alert("로그인 후 이용 가능합니다."); // 경고 메시지 표시
+          return;
+        }
         // "꿈 다이어리" 클릭 시 diaryPage.html로 이동
         window.location.href = `../frontHTML/diaryPage.html`;
       } else {
