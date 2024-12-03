@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/diaryPage.css">
 </head>
 <body>
+  <a href="mainPage.html" class="back-link">← 뒤로 가기</a>
   <header>
     <nav class="user-menu">
       <button id="auth-btn" class="top-bar-button"></button>
@@ -17,8 +18,24 @@
   </header>
 
   <main>
-    <div class="tlqkf">
-      <button id="write-diary-btn">일기 작성하기</button>
+    <div class="filter-container">
+      <div class="category-wrapper">
+        <select id="category-filter">
+          <option value="all" selected>전체</option>
+          <option value="신체">신체</option>
+          <option value="동물">동물</option>
+          <option value="음식">음식</option>
+          <option value="장소">장소</option>
+          <option value="인물">인물</option>
+          <option value="식물">식물</option>
+          <option value="행동">행동</option>
+          <option value="자연">자연</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <div class="write-diary-wrapper">
+        <button id="write-diary-btn">일기 작성하기</button>
+      </div>
     </div>
     <div id="diary-container" class="diary-container">
       <!-- 일기 데이터 렌더링 -->
@@ -59,16 +76,11 @@
     });
 
     let diaries = [
-      { id: 1, title: "일기 제목 1", content: "오늘은 정말 행복한 하루였다.", date: "2024-12-01" },
-      { id: 2, title: "일기 제목 2", content: "비가 와서 우울했지만 그래도 좋았다.", date: "2024-12-02" },
-      { id: 3, title: "일기 제목 3", content: "친구들과 만난 날.", date: "2024-12-03" },
-      { id: 4, title: "일기 제목 4", content: "맛있는 음식을 먹은 날.", date: "2024-12-04" },
-      { id: 5, title: "일기 제목 5", content: "조용한 하루를 보낸 날.", date: "2024-12-05" },
-      { id: 6, title: "일기 제목 6", content: "산책하며 생각이 많았던 날.", date: "2024-12-06" },
-      { id: 7, title: "일기 제목 7", content: "책을 읽으며 여유를 느낀 날.", date: "2024-12-07" },
-      { id: 8, title: "일기 제목 8", content: "운동하며 땀 흘린 날.", date: "2024-12-08" },
-      { id: 9, title: "일기 제목 9", content: "새로운 취미를 시작한 날.", date: "2024-12-09" },
-      { id: 10, title: "일기 제목 10", content: "가족과 시간을 보낸 날.", date: "2024-12-10" },
+      { id: 1, title: "일기 제목 1", content: "오늘은 정말 행복한 하루였다.", date: "2024-12-01", category: "행동" },
+      { id: 2, title: "일기 제목 2", content: "비가 와서 우울했지만 그래도 좋았다.", date: "2024-12-02", category: "자연" },
+      { id: 3, title: "일기 제목 3", content: "친구들과 만난 날.", date: "2024-12-03", category: "인물" },
+      { id: 4, title: "일기 제목 4", content: "맛있는 음식을 먹은 날.", date: "2024-12-04", category: "음식" },
+      { id: 5, title: "일기 제목 5", content: "조용한 하루를 보낸 날.", date: "2024-12-05", category: "기타" },
     ];
 
     // 데이터를 최신순으로 정렬
@@ -78,13 +90,17 @@
     const diariesPerPage = 5;
 
     // 일기 렌더링 함수
-    function renderDiaries(page) {
+    function renderDiaries(page, filterCategory = "all") {
       const container = document.getElementById("diary-container");
       container.innerHTML = ""; // 초기화
 
+      let filteredDiaries = filterCategory === "all"
+        ? diaries
+        : diaries.filter((diary) => diary.category === filterCategory);
+
       const startIndex = (page - 1) * diariesPerPage;
       const endIndex = page * diariesPerPage;
-      const currentDiaries = diaries.slice(startIndex, endIndex);
+      const currentDiaries = filteredDiaries.slice(startIndex, endIndex);
 
       currentDiaries.forEach((diary) => {
         const diaryDiv = document.createElement("div");
@@ -99,44 +115,32 @@
 
       // 페이지 버튼 상태 업데이트
       document.getElementById("prev-btn").disabled = page === 1;
-      document.getElementById("next-btn").disabled = endIndex >= diaries.length;
+      document.getElementById("next-btn").disabled = endIndex >= filteredDiaries.length;
     }
 
     // 페이지네이션 이벤트 리스너 추가
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        renderDiaries(currentPage);
+        const selectedCategory = document.getElementById("category-filter").value;
+        renderDiaries(currentPage, selectedCategory);
       }
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
       if (currentPage * diariesPerPage < diaries.length) {
         currentPage++;
-        renderDiaries(currentPage);
+        const selectedCategory = document.getElementById("category-filter").value;
+        renderDiaries(currentPage, selectedCategory);
       }
     });
 
-    // API를 통한 데이터 불러오기
-    /*
-    function fetchDiaries() {
-      fetch('/api/diaries')
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('데이터 불러오기 실패');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          diaries = data;
-          diaries.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
-          renderDiaries(currentPage); // 초기 렌더링
-        })
-        .catch((error) => console.error('API 호출 에러:', error));
-    }
-
-    // fetchDiaries(); // API 연동 시 주석 해제
-    */
+    // 카테고리 필터링
+    document.getElementById("category-filter").addEventListener("change", (event) => {
+      const selectedCategory = event.target.value;
+      currentPage = 1; // 페이지 초기화
+      renderDiaries(currentPage, selectedCategory);
+    });
 
     // 초기 일기 렌더링
     renderDiaries(currentPage);
