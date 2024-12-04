@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/css/communityPage.css">
 </head>
 <body>
+  <a href="mainPage.html" class="back-link">← 뒤로 가기</a>
   <header>
     <nav class="user-menu">
       <button id="auth-btn" class="top-bar-button"></button>
@@ -17,8 +18,24 @@
   </header>
 
   <main>
-    <div class="tlqkf">
-      <button id="write-post-btn">게시글 작성</button>
+    <div class="filter-container">
+      <div class="category-wrapper">
+        <select id="category-filter">
+          <option value="all" selected>전체</option>
+          <option value="신체">신체</option>
+          <option value="동물">동물</option>
+          <option value="음식">음식</option>
+          <option value="장소">장소</option>
+          <option value="인물">인물</option>
+          <option value="식물">식물</option>
+          <option value="행동">행동</option>
+          <option value="자연">자연</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <div class="write-diary-wrapper">
+        <button id="write-post-btn">게시글 작성하기</button>
+      </div>
     </div>
     <div id="post-container" class="post-container">
       <!-- 게시글 렌더링 -->
@@ -60,31 +77,38 @@
 
     // 임시 데이터
     const posts = [
-      {
-        id: 1,
-        title: "나 오늘 완전 개꿈꿨음",
-        content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;",
-        likes: Math.floor(Math.random() * 100),
-      },
-      ...Array.from({ length: 29 }, (_, i) => ({
-        id: i + 2,
-        title: `제목 ${i + 2}`,
-        content: `이것은 게시글 내용 ${i + 2} 입니다.`,
-        likes: Math.floor(Math.random() * 100),
-      })),
+      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
+      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", likes: 42, category: "자연" },
+      { id: 3, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
+      { id: 4, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 5, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
+      { id: 6, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
+      { id: 7, title: "좋은 날씨", content: "햇살이 좋아서 피크민이랑 산책했다.", likes: 42, category: "자연" },
+      { id: 8, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
+      { id: 9, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 10, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
+      { id: 11, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
+      { id: 12, title: "좋은 날씨", content: "눈이 내렸다. 진짜 많이.", likes: 42, category: "자연" },
+      { id: 13, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
+      { id: 14, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
+      { id: 15, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"}
     ];
 
     let currentPage = 1;
     const postsPerPage = 10;
 
     // 게시글 렌더링 함수
-    function renderPosts(page) {
+    function renderPosts(page, filterCategory = "all") {
       const container = document.getElementById("post-container");
       container.innerHTML = ""; // 초기화
 
+      let filteredPosts = filterCategory === "all"
+        ? posts
+        : posts.filter((post) => post.category === filterCategory);
+
       const startIndex = (page - 1) * postsPerPage;
       const endIndex = page * postsPerPage;
-      const currentPosts = posts.slice(startIndex, endIndex);
+      const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
       currentPosts.forEach((post) => {
         const postDiv = document.createElement("div");
@@ -92,6 +116,7 @@
         postDiv.innerHTML = `
           <h2 class="post-title">${post.title}</h2>
           <p class="post-content">${post.content}</p>
+          <p class="post-category">카테고리: ${post.category}</p>
           <div class="post-footer">
             <span class="post-likes" data-id="${post.id}">❤️ ${post.likes}</span>
           </div>
@@ -101,63 +126,31 @@
 
       // 페이지 버튼 상태 업데이트
       document.getElementById("prev-btn").disabled = page === 1;
-      document.getElementById("next-btn").disabled = endIndex >= posts.length;
+      document.getElementById("next-btn").disabled = endIndex >= filteredPosts.length;
     }
 
     // 페이지네이션 이벤트 리스너 추가
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        renderPosts(currentPage);
+        const selectedCategory = document.getElementById("category-filter").value;
+        renderPosts(currentPage, selectedCategory);
       }
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
-      if (currentPage * postsPerPage < posts.length) {
+      const selectedCategory = document.getElementById("category-filter").value;
+      if (currentPage * postsPerPage < posts.filter((p) => selectedCategory === "all" || p.category === selectedCategory).length) {
         currentPage++;
-        renderPosts(currentPage);
+        renderPosts(currentPage, selectedCategory);
       }
     });
 
-    // 좋아요 업데이트 처리
-    document.querySelector(".post-container").addEventListener("click", (e) => {
-      if (e.target.classList.contains("post-likes")) {
-        if (!isLoggedIn) {
-          alert("로그인 후 좋아요를 누를 수 있습니다."); // 경고 문구 표시
-          return;
-        }
-
-        const postId = e.target.dataset.id;
-
-        // 좋아요 증가 처리 (API 연동, 주석 처리)
-        /*
-        fetch(`/api/posts/${postId}/like`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("좋아요 요청 실패");
-            }
-            return response.json();
-          })
-          .then((updatedLikes) => {
-            e.target.textContent = `❤️ ${updatedLikes.likes}`;
-          })
-          .catch((error) => {
-            console.error("좋아요 요청 에러:", error);
-          });
-        */
-
-        // 임시 데이터 업데이트
-        const post = posts.find((p) => p.id === parseInt(postId));
-        if (post) {
-          post.likes += 1;
-          e.target.textContent = `❤️ ${post.likes}`;
-        }
-      }
+    // 카테고리 필터링
+    document.getElementById("category-filter").addEventListener("change", (event) => {
+      const selectedCategory = event.target.value;
+      currentPage = 1; // 페이지 초기화
+      renderPosts(currentPage, selectedCategory);
     });
 
     // 초기 게시글 렌더링

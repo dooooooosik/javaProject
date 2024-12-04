@@ -32,6 +32,15 @@ body {
   align-items: center;
   flex-direction: column;
 }
+.back-link {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
+  color: white;
+  text-decoration: none;
+}
 
 .background-overlay {
   position: absolute;
