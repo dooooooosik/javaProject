@@ -106,6 +106,23 @@
     display: flex;
     flex-direction: column;
   }
+  
+  #dream-h1 {
+    width: 98%; /* 입력 필드 가로 길이 */
+    height: 40px; /* 입력 필드 높이 */
+    padding: 10px; /* 입력 필드 내부 여백 */
+    font-size: 1rem; /* 글자 크기 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+    border: 1.5px solid #ffffff; /* 테두리 색상과 두께 */
+    outline: none; /* 포커스 시 파란색 테두리 제거 */
+    background-color: #fff; /* 배경색 */
+    color: #333; /* 글자 색상 */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* 입력 필드에 그림자 추가 */
+  }
+  
+  #dream-h1::placeholder {
+    color: #bbb; /* Placeholder(힌트 텍스트) 글자 색상 */
+  }
 .tlqkf{
     padding-top: 10px;
     text-align: left;
@@ -128,8 +145,8 @@
   }
   
   textarea {
-    height: 22rem; /* 고정 높이 */
-    max-height: 22rem; /* 최대 높이를 고정 */
+    height: 20rem; /* 고정 높이 */
+    max-height: 20rem; /* 최대 높이를 고정 */
     overflow-y: auto; /* 세로 스크롤 활성화 */
     border-radius: 5px;
     padding: 15px;
@@ -159,7 +176,7 @@
   }
   
   button {
-    margin-top: 20px;
+    margin-top: -100px;
     padding: 10px;
     font-size: 1rem;
     border: none;

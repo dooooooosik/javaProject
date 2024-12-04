@@ -139,6 +139,7 @@
       }
     });
 
+
     // 페이지네이션 이벤트 리스너 추가
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
@@ -156,6 +157,54 @@
 
     // 초기 게시글 렌더링
     renderPosts(currentPage);
+      
+    // 게시글 렌더링 함수
+    function renderPosts(page) {
+  const container = document.getElementById("post-container");
+  container.innerHTML = ""; // 초기화
+
+  const token = localStorage.getItem("token"); // 토큰 가져오기
+
+  fetch(`http://127.0.0.1:8080/api/posts`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("게시글 조회 실패");
+      return response.json();
+    })
+    .then(posts => {
+      const startIndex = (page - 1) * postsPerPage;
+      const endIndex = page * postsPerPage;
+      const currentPosts = posts.slice(startIndex, endIndex); // 필터링 제거
+
+      currentPosts.forEach((post) => {
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post-box");
+        postDiv.innerHTML = `
+          <h2 class="post-title">${post.title}</h2>
+          <p class="post-content">${post.content}</p>
+          <div class="post-footer">
+            <button class="edit-btn" data-id="${post.id}">수정</button>
+            <button class="delete-btn" data-id="${post.id}">삭제</button>
+          </div>
+        `;
+        container.appendChild(postDiv);
+      });
+
+      document.getElementById("prev-btn").disabled = page === 1;
+      document.getElementById("next-btn").disabled = endIndex >= posts.length;
+    })
+    .catch(error => {
+      console.error("API 호출 에러:", error);
+      container.innerHTML = `<p>게시글을 불러오는 데 실패했습니다.</p>`;
+    });
+}
+
   </script>
+
+  
 </body>
 </html>
