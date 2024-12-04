@@ -124,9 +124,13 @@
         }
 
         // 회원가입 요청 (API 연동 주석 처리)
-        /*
+        
         try {
+<<<<<<< HEAD
+          const response = await fetch("http://127.0.0.1:8080/api/auth/signup", {
+=======
           const response = await fetch("http://127.0.0.1:5500/api/auth/signup", {
+>>>>>>> 9e64afa87fb7f8f7ec1d2b9af6d556e0fa47348a
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, nickname, password }),
@@ -144,7 +148,7 @@
           console.error("회원가입 중 오류 발생:", error);
           alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
         }
-        */
+        
       });
     });
   </script>

@@ -37,7 +37,7 @@
         <textarea id="dream-content" placeholder="게시글 내용을 작성하세요"></textarea>
         <div>
           <div class="tlqkf">
-            <label for="category">카테고리</label>
+            <!-- <label for="category">카테고리</label>
           </div>
           <select id="category">
             <option value="" disabled selected>카테고리를 선택하세요</option>
@@ -50,7 +50,7 @@
             <option value="행동">행동</option>
             <option value="자연">자연</option>
             <option value="기타">기타</option>
-          </select>
+          </select> -->
         </div>
         <button type="button" id="submit-btn">작성 완료</button>
       </form>
@@ -78,37 +78,47 @@
 
       // 게시글 작성 처리
       const submitBtn = document.getElementById("submit-btn");
+      // 게시글 작성 처리
       submitBtn.addEventListener("click", () => {
-        const title = document.getElementById("dream-h1").value.trim();
-        const date = document.getElementById("diary-date").value;
-        const content = document.getElementById("dream-content").value.trim();
-        const category = document.getElementById("category").value;
+  const token = localStorage.getItem("token"); // 저장된 토큰 가져오기
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    window.location.href = "/frontHTML/loginPage.html";
+    return;
+  }
 
-        if (!title || !date || !content || !category) {
-          alert("모든 필드를 채워주세요.");
-          return;
-        }
+  const title = document.getElementById("dream-h1").value.trim();
+  const date = document.getElementById("diary-date").value; // 날짜 포함
+  const content = document.getElementById("dream-content").value.trim();
 
-        // POST 요청 (API 연동, 주석 처리)
-        /*
-        fetch('/api/diary', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, date, content, category }),
-        })
-          .then(response => {
-            if (!response.ok) throw new Error("게시글 작성 실패");
-            alert("게시글 작성 완료!");
-            window.location.href = "/frontHTML/diaryPage.html";
-          })
-          .catch(error => console.error("API 호출 에러:", error));
-        */
+  if (!title || !date || !content) {
+    alert("모든 필드를 채워주세요.");
+    return;
+  }
 
-        // 임시 동작
-        alert("게시글 작성 완료!");
-        window.location.href = "/frontHTML/diaryPage.html";
-      });
+  // 백엔드로 데이터 전송
+  fetch('http://127.0.0.1:8080/api/diaries', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, content, createdAt: date }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("게시글 작성 실패");
+      return response.json();
+    })
+    .then(() => {
+      alert("게시글 작성 완료!");
+      window.location.href = "/frontHTML/diaryPage.html";
+    })
+    .catch((error) => {
+      console.error("API 호출 에러:", error);
+      alert("게시글 작성 중 오류가 발생했습니다.");
     });
+});
+});
   </script>
 </body>
 </html>
