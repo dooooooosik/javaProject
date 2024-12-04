@@ -77,21 +77,8 @@
 
     // 임시 데이터
     const posts = [
-      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
-      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", likes: 42, category: "자연" },
-      { id: 3, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
-      { id: 4, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
-      { id: 5, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
-      { id: 6, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
-      { id: 7, title: "좋은 날씨", content: "햇살이 좋아서 피크민이랑 산책했다.", likes: 42, category: "자연" },
-      { id: 8, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
-      { id: 9, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
-      { id: 10, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"},
-      { id: 11, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙 좀 더 길게 써야지 어떤지 테스트를 해보는데 얼마나 더 작성을 해야하지. 간장공장공장장은 간공장장이고 된장공잗공장장은 장공장장이다. 촉촉한 초코칩 솔직히 쿠키는 촉촉한게 아니라 바삭해야함.. 쿠키가 촉촉하면 그게 빵이지 쿠키냐..;;;", likes: 15, category: "음식" },
-      { id: 12, title: "좋은 날씨", content: "눈이 내렸다. 진짜 많이.", likes: 42, category: "자연" },
-      { id: 13, title: "내가 만든 요리", content: "파스타를 완벽하게 만들었다.", likes: 10, category: "음식" },
-      { id: 14, title: "학교에서", content: "친구들과 이야기한 하루.", likes: 21, category: "인물" },
-      { id: 15, title: "집가고 싶다", content: "집가서 침대에 누워서 마라탕 시킨거 기다리면서 드라마 보고싶다", likes: 12, category: "행동"}
+      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙...", likes: 15, category: "음식" },
+      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", likes: 42, category: "자연" }
     ];
 
     let currentPage = 1;
@@ -118,39 +105,53 @@
           <p class="post-content">${post.content}</p>
           <p class="post-category">카테고리: ${post.category}</p>
           <div class="post-footer">
-            <span class="post-likes" data-id="${post.id}">❤️ ${post.likes}</span>
+            <button class="edit-btn" data-id="${post.id}">수정</button>
+            <button class="delete-btn" data-id="${post.id}">삭제</button>
           </div>
         `;
         container.appendChild(postDiv);
       });
 
-      // 페이지 버튼 상태 업데이트
       document.getElementById("prev-btn").disabled = page === 1;
       document.getElementById("next-btn").disabled = endIndex >= filteredPosts.length;
     }
+
+    // 수정 버튼 동작
+    document.addEventListener("click", (event) => {
+      if (event.target.classList.contains("edit-btn")) {
+        const postId = event.target.getAttribute("data-id");
+        const post = posts.find((p) => p.id == postId);
+        if (post) {
+          localStorage.setItem("editPost", JSON.stringify(post));
+          window.location.href = "/frontHTML/communityWrite.html"; // 작성 페이지로 이동
+        }
+      }
+
+      if (event.target.classList.contains("delete-btn")) {
+        const postId = event.target.getAttribute("data-id");
+        if (confirm("정말 삭제하시겠습니까?")) {
+          const index = posts.findIndex((p) => p.id == postId);
+          if (index !== -1) {
+            posts.splice(index, 1); // 데이터 삭제
+            renderPosts(currentPage); // 렌더링 업데이트
+          }
+        }
+      }
+    });
 
     // 페이지네이션 이벤트 리스너 추가
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        const selectedCategory = document.getElementById("category-filter").value;
-        renderPosts(currentPage, selectedCategory);
+        renderPosts(currentPage);
       }
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
-      const selectedCategory = document.getElementById("category-filter").value;
-      if (currentPage * postsPerPage < posts.filter((p) => selectedCategory === "all" || p.category === selectedCategory).length) {
+      if (currentPage * postsPerPage < posts.length) {
         currentPage++;
-        renderPosts(currentPage, selectedCategory);
+        renderPosts(currentPage);
       }
-    });
-
-    // 카테고리 필터링
-    document.getElementById("category-filter").addEventListener("change", (event) => {
-      const selectedCategory = event.target.value;
-      currentPage = 1; // 페이지 초기화
-      renderPosts(currentPage, selectedCategory);
     });
 
     // 초기 게시글 렌더링
