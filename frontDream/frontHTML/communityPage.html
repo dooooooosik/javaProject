@@ -17,26 +17,12 @@
     </div>
   </header>
 
+  <div class="write-post-wrap">
+    <button id="my-posts-btn">내 게시글 보기</button>
+    <button id="write-post-btn">게시글 작성하기</button>
+  </div>
+  
   <main>
-    <div class="filter-container">
-      <div class="category-wrapper">
-        <select id="category-filter">
-          <option value="all" selected>전체</option>
-          <option value="신체">신체</option>
-          <option value="동물">동물</option>
-          <option value="음식">음식</option>
-          <option value="장소">장소</option>
-          <option value="인물">인물</option>
-          <option value="식물">식물</option>
-          <option value="행동">행동</option>
-          <option value="자연">자연</option>
-          <option value="기타">기타</option>
-        </select>
-      </div>
-      <div class="write-diary-wrapper">
-        <button id="write-post-btn">게시글 작성하기</button>
-      </div>
-    </div>
     <div id="post-container" class="post-container">
       <!-- 게시글 렌더링 -->
     </div>
@@ -56,6 +42,7 @@
       authBtn.textContent = "로그아웃";
       authBtn.addEventListener("click", () => {
         localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userId"); // 로그아웃 시 userId도 제거
         window.location.reload();
       });
     } else {
@@ -75,26 +62,31 @@
       }
     });
 
-    // 임시 데이터
-    const posts = [
-      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙...", likes: 15, category: "음식" },
-      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", likes: 42, category: "자연" }
-    ];
-
-    let currentPage = 1;
-    const postsPerPage = 10;
+    // 내 게시글 보기 버튼 동작
+    const myPostsBtn = document.getElementById("my-posts-btn");
+    myPostsBtn.addEventListener("click", () => {
+      if (isLoggedIn) {
+        const userId = localStorage.getItem("userId"); // 로그인한 유저의 ID 가져오기
+        renderPosts(currentPage, userId); // 내 게시글 렌더링
+      } else {
+        alert("로그인 후 이용 가능한 기능입니다."); // 경고 문구
+      }
+    });
 
     // 게시글 렌더링 함수
-    function renderPosts(page, filterCategory = "all") {
+    function renderPosts(page, userId = null) {
       const container = document.getElementById("post-container");
       container.innerHTML = ""; // 초기화
 
-      let filteredPosts = filterCategory === "all"
-        ? posts
-        : posts.filter((post) => post.category === filterCategory);
-
       const startIndex = (page - 1) * postsPerPage;
       const endIndex = page * postsPerPage;
+      let filteredPosts = posts;
+
+      // 내 게시글만 보기일 경우 필터링
+      if (userId) {
+        filteredPosts = posts.filter(post => post.userId === userId);
+      }
+
       const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
       currentPosts.forEach((post) => {
@@ -103,10 +95,11 @@
         postDiv.innerHTML = `
           <h2 class="post-title">${post.title}</h2>
           <p class="post-content">${post.content}</p>
-          <p class="post-category">카테고리: ${post.category}</p>
           <div class="post-footer">
-            <button class="edit-btn" data-id="${post.id}">수정</button>
-            <button class="delete-btn" data-id="${post.id}">삭제</button>
+            ${post.userId === localStorage.getItem("userId") ? `
+              <button class="edit-btn" data-id="${post.id}">수정</button>
+              <button class="delete-btn" data-id="${post.id}">삭제</button>
+            ` : ''}
           </div>
         `;
         container.appendChild(postDiv);
@@ -116,7 +109,7 @@
       document.getElementById("next-btn").disabled = endIndex >= filteredPosts.length;
     }
 
-    // 수정 버튼 동작
+    // 수정/삭제 버튼 동작
     document.addEventListener("click", (event) => {
       if (event.target.classList.contains("edit-btn")) {
         const postId = event.target.getAttribute("data-id");
@@ -154,6 +147,20 @@
         renderPosts(currentPage);
       }
     });
+
+    // 임시 데이터
+    const posts = [
+      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙...", userId: "user1" },
+      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", userId: "user2" }
+    ];
+
+    let currentPage = 1;
+    const postsPerPage = 10;
+
+    // 로그인 시 userId 저장
+    if (isLoggedIn && !localStorage.getItem("userId")) {
+      localStorage.setItem("userId", "user1"); // 예시: 로그인한 유저 ID 저장
+    }
 
     // 초기 게시글 렌더링
     renderPosts(currentPage);
