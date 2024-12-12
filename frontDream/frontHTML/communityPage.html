@@ -18,14 +18,13 @@
   </header>
 
   <div class="write-post-wrap">
+    <button id="all-posts-btn">전체 게시글 보기</button>
     <button id="my-posts-btn">내 게시글 보기</button>
     <button id="write-post-btn">게시글 작성하기</button>
   </div>
   
   <main>
-    <div id="post-container" class="post-container">
-      <!-- 게시글 렌더링 -->
-    </div>
+    <div id="post-container" class="post-container"></div>
 
     <div class="pagination">
       <button id="prev-btn" class="pagination-btn" disabled>이전</button>
@@ -34,6 +33,12 @@
   </main>
 
   <script>
+    let currentPage = 1; 
+    const postsPerPage = 10; 
+    let allPosts = []; // 모든 게시글을 담는 배열
+
+    const token = localStorage.getItem("token");
+
     // 로그인 상태 확인
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const authBtn = document.getElementById("auth-btn");
@@ -62,158 +67,144 @@
       }
     });
 
+    // 전체 게시글 가져오기
+    const allPostsBtn = document.getElementById("all-posts-btn");
+    allPostsBtn.addEventListener("click", () => {
+      fetchAllPosts();
+    });
+
     // 내 게시글 보기 버튼 동작
     const myPostsBtn = document.getElementById("my-posts-btn");
     myPostsBtn.addEventListener("click", () => {
       if (isLoggedIn) {
-        const token = localStorage.getItem("token");
-        fetch("http://127.0.0.1:8080/api/posts/myposts", {
-          method: "GET",
-          headers: { "Authorization": `Bearer ${token}` },
-        })
-        .then(response => {
-          if (!response.ok) throw new Error("내 게시글 조회 실패");
-          return response.json();
-        })
-        .then(data => {
-          renderPosts(data); // API 호출 결과를 렌더링
-        })
-        .catch(error => {
-          console.error("API 호출 에러:", error);
-          alert("내 게시글 조회 중 오류가 발생했습니다.");
-        });
+        fetchMyPosts();
       } else {
         alert("로그인 후 이용 가능한 기능입니다.");
       }
     });
 
+    // 전체 게시글 가져오기
+    function fetchAllPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts; 
+        currentPage = 1;
+        renderPosts(); 
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("전체 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
+    // 내 게시글 가져오기
+    function fetchMyPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts/myposts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts;
+        currentPage = 1;
+        renderPosts();
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("내 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
     // 게시글 렌더링 함수
-    function renderPosts(page, userId = null) {
+    function renderPosts() {
       const container = document.getElementById("post-container");
       container.innerHTML = "";
 
-      const startIndex = (page - 1) * postsPerPage;
-      const endIndex = page * postsPerPage;
-      let filteredPosts = posts;
+      const startIndex = (currentPage - 1) * postsPerPage;
+      const endIndex = currentPage * postsPerPage;
+      const currentPosts = allPosts.slice(startIndex, endIndex);
 
-      if (userId) {
-        filteredPosts = posts.filter(post => post.userId === userId);
+      if (!currentPosts || currentPosts.length === 0) {
+        container.innerHTML = "<p>게시글이 없습니다.</p>";
+        return;
       }
 
-      const currentPosts = filteredPosts.slice(startIndex, endIndex);
-
-      currentPosts.forEach((post) => {
+      currentPosts.forEach(post => {
         const postDiv = document.createElement("div");
         postDiv.classList.add("post-box");
         postDiv.innerHTML = `
           <h2 class="post-title">${post.title}</h2>
+          <p class="post-author">작성자: ${post.username}</p>
           <p class="post-content">${post.content}</p>
           <div class="post-footer">
-            ${post.userId === localStorage.getItem("userId") ? `
-              <button class="edit-btn" data-id="${post.id}">수정</button>
-              <button class="delete-btn" data-id="${post.id}">삭제</button>
-            ` : ''}
+            <button class="edit-btn" data-id="${post.id}">수정</button>
+            <button class="delete-btn" data-id="${post.id}">삭제</button>
           </div>
         `;
         container.appendChild(postDiv);
       });
 
-      document.getElementById("prev-btn").disabled = page === 1;
-      document.getElementById("next-btn").disabled = endIndex >= filteredPosts.length;
+      updatePaginationButtons();
     }
 
-    // 수정/삭제 버튼 동작
+    function updatePaginationButtons() {
+      document.getElementById("prev-btn").disabled = currentPage === 1;
+      document.getElementById("next-btn").disabled = currentPage * postsPerPage >= allPosts.length;
+    }
+
+    document.getElementById("prev-btn").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPosts();
+      }
+    });
+
+    document.getElementById("next-btn").addEventListener("click", () => {
+      if (currentPage * postsPerPage < allPosts.length) {
+        currentPage++;
+        renderPosts();
+      }
+    });
+
     document.addEventListener("click", (event) => {
       if (event.target.classList.contains("edit-btn")) {
         const postId = event.target.getAttribute("data-id");
-        const token = localStorage.getItem("token");
 
         fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}` }
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` },
         })
         .then(response => response.json())
         .then(post => {
           localStorage.setItem("editPost", JSON.stringify(post));
           localStorage.setItem("isEditing", true);
           window.location.href = "/frontHTML/communityWrite.html";
-        });
+        })
+        .catch(error => console.error("수정할 게시글 조회 실패:", error));
       }
 
       if (event.target.classList.contains("delete-btn")) {
         const postId = event.target.getAttribute("data-id");
+
         if (confirm("정말 삭제하시겠습니까?")) {
-          const index = posts.findIndex((p) => p.id == postId);
-          if (index !== -1) {
-            posts.splice(index, 1);
-            renderPosts(currentPage);
-          }
+          fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` },
+          })
+          .then(() => {
+            alert("게시글이 삭제되었습니다.");
+            fetchAllPosts(); 
+          })
+          .catch(error => console.error("게시글 삭제 실패:", error));
         }
       }
     });
 
-    document.getElementById("prev-btn").addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPosts(currentPage);
-      }
-    });
-
-    document.getElementById("next-btn").addEventListener("click", () => {
-      if (currentPage * postsPerPage < posts.length) {
-        currentPage++;
-        renderPosts(currentPage);
-      }
-    });
-
-
-    let currentPage = 1;
-    const postsPerPage = 20;
-
-    if (isLoggedIn && !localStorage.getItem("userId")) {
-      localStorage.setItem("userId", "user1");
-    }
-
-    renderPosts(currentPage);
-
-    function renderPosts(page) {
-      const container = document.getElementById("post-container");
-      container.innerHTML = "";
-
-      const token = localStorage.getItem("token");
-
-      fetch(`http://127.0.0.1:8080/api/posts`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      .then(response => response.json())
-      .then(posts => {
-        const startIndex = (page - 1) * postsPerPage;
-        const endIndex = page * postsPerPage;
-        const currentPosts = posts.slice(startIndex, endIndex);
-
-        currentPosts.forEach((post) => {
-          const postDiv = document.createElement("div");
-          postDiv.classList.add("post-box");
-          postDiv.innerHTML = `
-            <h2 class="post-title">${post.title}</h2>
-            <p class="post-content">${post.content}</p>
-            <div class="post-footer">
-              <button class="edit-btn" data-id="${post.id}">수정</button>
-              <button class="delete-btn" data-id="${post.id}">삭제</button>
-            </div>
-          `;
-          container.appendChild(postDiv);
-        });
-
-        document.getElementById("prev-btn").disabled = page === 1;
-        document.getElementById("next-btn").disabled = endIndex >= posts.length;
-      })
-      .catch(error => {
-        console.error("API 호출 에러:", error);
-        container.innerHTML = `<p>게시글을 불러오는 데 실패했습니다.</p>`;
-      });
-    }
+    fetchAllPosts();
   </script>
 </body>
 </html>

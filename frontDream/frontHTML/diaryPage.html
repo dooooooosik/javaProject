@@ -30,127 +30,137 @@
   </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const authBtn = document.getElementById("auth-btn");
-      if (!authBtn) {
-        console.error("auth-btn 요소를 찾을 수 없습니다.");
-      } else {
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-        authBtn.textContent = isLoggedIn ? "로그아웃" : "로그인";
-        authBtn.addEventListener("click", () => {
-          if (isLoggedIn) {
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("userId");
-            window.location.reload();
-          } else {
-            window.location.href = "/frontHTML/loginPage.html";
-          }
-        });
-      }
+document.addEventListener("DOMContentLoaded", () => {
+  const authBtn = document.getElementById("auth-btn");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
 
-      const writeDiaryBtn = document.getElementById("write-diary-btn");
-      if (writeDiaryBtn) {
-        writeDiaryBtn.addEventListener("click", () => {
-          if (localStorage.getItem("isLoggedIn")) {
-            window.location.href = "/frontHTML/diaryWrite.html";
-          } else {
-            alert("로그인 후 일기 작성이 가능합니다.");
-          }
-        });
-      }
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  authBtn.textContent = isLoggedIn ? "로그아웃" : "로그인";
+  authBtn.addEventListener("click", () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userId");
+      window.location.reload();
+    } else {
+      window.location.href = "/frontHTML/loginPage.html";
+    }
+  });
 
-      let diaries = [];
-      let currentPage = 1;
-      const diariesPerPage = 5;
+  const writeDiaryBtn = document.getElementById("write-diary-btn");
+  writeDiaryBtn.addEventListener("click", () => {
+    if (localStorage.getItem("isLoggedIn")) {
+      window.location.href = "/frontHTML/diaryWrite.html";
+    } else {
+      alert("로그인 후 일기 작성이 가능합니다.");
+    }
+  });
 
-      function renderDiaries(page) {
-        const container = document.getElementById("diary-container");
-        container.innerHTML = ""; 
+  let diaries = [];
+  let currentPage = 1;
+  const diariesPerPage = 5;
 
-        const startIndex = (page - 1) * diariesPerPage;
-        const endIndex = page * diariesPerPage;
-        const currentDiaries = diaries.slice(startIndex, endIndex);
+  function renderDiaries(page) {
+    const container = document.getElementById("diary-container");
+    container.innerHTML = "";  // 이전 콘텐츠를 지우기
 
-        currentDiaries.forEach((diary) => {
-          const diaryDiv = document.createElement("div");
-          diaryDiv.classList.add("diary-box");
+    const startIndex = (page - 1) * diariesPerPage;
+    const endIndex = page * diariesPerPage;
+    const currentDiaries = diaries.slice(startIndex, endIndex);
 
-          const formattedDate = diary.createdAt
-            ? new Date(diary.createdAt).toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            : "날짜 없음";
+    currentDiaries.forEach((diary) => {
+      const diaryDiv = document.createElement("div");
+      diaryDiv.classList.add("diary-box");
 
-          diaryDiv.innerHTML = `
-            <h2 class="diary-title">${diary.title}</h2>
-            <p class="diary-date">${formattedDate}</p>
-            <p class="diary-content">${diary.content}</p>
-            <div class="diary-footer">
-              <button class="edit-diary-btn" data-id="${diary.id}">수정</button>
-              <button class="delete-diary-btn" data-id="${diary.id}">삭제</button>
-            </div>
-          `;
-          container.appendChild(diaryDiv);
-        });
-
-        document.getElementById("prev-btn").disabled = page === 1;
-        document.getElementById("next-btn").disabled = endIndex >= diaries.length;
-
-        addDiaryEventListeners();
-      }
-
-      function addDiaryEventListeners() {
-        document.querySelectorAll(".edit-diary-btn").forEach((button) => {
-          button.addEventListener("click", (event) => {
-            const diaryId = event.target.dataset.id;
-            const diary = diaries.find((d) => d.id === parseInt(diaryId));
-            if (diary) {
-              localStorage.setItem("editDiary", JSON.stringify(diary));
-              window.location.href = "/frontHTML/diaryWrite.html";
-            }
-          });
-        });
-
-        document.querySelectorAll(".delete-diary-btn").forEach((button) => {
-          button.addEventListener("click", (event) => {
-            const diaryId = event.target.dataset.id;
-            if (confirm("정말로 이 일기를 삭제하시겠습니까?")) {
-              deleteDiary(diaryId);
-            }
-          });
-        });
-      }
-
-      function deleteDiary(diaryId) {
-        fetch(`http://127.0.0.1:8080/api/diaries/${diaryId}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        })
-          .then((response) => response.ok ? response.json() : Promise.reject("삭제 실패"))
-          .then(() => {
-            diaries = diaries.filter((diary) => diary.id !== parseInt(diaryId));
-            renderDiaries(currentPage);
+      const formattedDate = diary.createdAt
+        ? new Date(diary.createdAt).toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
           })
-          .catch((error) => alert("일기를 삭제하는 중 문제가 발생했습니다."));
-      }
+        : "날짜 없음";
 
-      function fetchDiaries() {
-        fetch('http://127.0.0.1:8080/api/diaries', {
-          method: 'GET',
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        })
-          .then(response => response.json())
-          .then(data => {
-            diaries = data;
-            diaries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            renderDiaries(currentPage);
-          });
-      }
-
-      fetchDiaries();
+      diaryDiv.innerHTML = `
+        <h2 class="diary-title">${diary.title}</h2>
+        <p class="diary-date">${formattedDate}</p>
+        <p class="diary-content">${diary.content}</p>
+        <div class="diary-footer">
+          <button class="edit-diary-btn" data-id="${diary.id}">수정</button>
+          <button class="delete-diary-btn" data-id="${diary.id}">삭제</button>
+        </div>
+      `;
+      container.appendChild(diaryDiv);
     });
+
+    prevBtn.disabled = page === 1;
+    nextBtn.disabled = endIndex >= diaries.length;
+
+    addDiaryEventListeners();
+  }
+
+  function addDiaryEventListeners() {
+    // 수정 버튼 클릭 시 처리
+    document.querySelectorAll(".edit-diary-btn").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const diaryId = event.target.dataset.id;
+        const diary = diaries.find((d) => d.id === parseInt(diaryId));
+        if (diary) {
+          localStorage.setItem("editDiary", JSON.stringify(diary));
+          window.location.href = "/frontHTML/diaryWrite.html";
+        }
+      });
+    });
+
+    // 삭제 버튼 클릭 시 처리
+    document.querySelectorAll(".delete-diary-btn").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    const diaryId = event.target.dataset.id;
+    const token = localStorage.getItem("token");
+
+    fetch(`http://127.0.0.1:8080/api/diaries/${diaryId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`삭제 실패! 상태 코드: ${response.status}`);
+      }
+      return response.status === 204 ? null : response.json(); // 🔥 204일 때 json 파싱 건너뜀
+    })
+    .then(() => {
+      alert("일기 삭제 완료!");
+      fetchDiaries();  // 삭제 후 일기 목록 새로고침
+    })
+    .catch(error => {
+      alert("삭제 실패!");
+      console.error("삭제 실패 원인:", error);
+        });
+      });
+    });
+  }
+
+  function fetchDiaries() {
+    fetch('http://127.0.0.1:8080/api/diaries', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+    .then(response => response.json())
+    .then(data => {
+      diaries = data;
+      renderDiaries(currentPage);
+    })
+    .catch(error => {
+      alert("일기 목록을 불러오는 데 실패했습니다.");
+      console.error(error);
+    });
+  }
+
+  fetchDiaries();
+});
+
+
   </script>
 </body>
 </html>
