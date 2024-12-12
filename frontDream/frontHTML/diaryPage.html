@@ -10,36 +10,19 @@
   <a href="mainPage.html" class="back-link">← 뒤로 가기</a>
   <header>
     <nav class="user-menu">
-      <button id="auth-btn" class="top-bar-button"></button>
+      <button id="auth-btn" class="top-bar-button">로그인</button>
     </nav>
     <div class="top-bar">
       <h1 class="title">내가 작성한 일기들</h1>
     </div>
   </header>
+
   <div class="write-diary-wrapper">
     <button id="write-diary-btn">일기 작성하기</button>
   </div>
+  
   <main>
-<<<<<<< HEAD
-    <div class="filter-container">
-      <div class="category-wrapper">
-        <select id="category-filter">
-          <option value="all" selected>전체</option>
-          <option value="준비중">준비중</option>
-
-        </select>
-      </div>
-      <div class="write-diary-wrapper">
-        <button id="write-diary-btn">일기 작성하기</button>
-      </div>
-    </div>
-=======
-      
->>>>>>> origin/main
-    <div id="diary-container" class="diary-container">
-      <!-- 일기 데이터 렌더링 -->
-    </div>
-
+    <div id="diary-container" class="diary-container"></div>
     <div class="pagination">
       <button id="prev-btn" class="pagination-btn" disabled>이전</button>
       <button id="next-btn" class="pagination-btn">다음</button>
@@ -47,178 +30,127 @@
   </main>
 
   <script>
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const authBtn = document.getElementById("auth-btn");
-
-    if (isLoggedIn) {
-      authBtn.textContent = "로그아웃";
-      authBtn.addEventListener("click", () => {
-        localStorage.removeItem("isLoggedIn");
-        window.location.reload();
-      });
-    } else {
-      authBtn.textContent = "로그인";
-      authBtn.addEventListener("click", () => {
-        window.location.href = "/frontHTML/loginPage.html";
-      });
-    }
-
-    const writeDiaryBtn = document.getElementById("write-diary-btn");
-    writeDiaryBtn.addEventListener("click", () => {
-      if (isLoggedIn) {
-        window.location.href = "/frontHTML/diaryWrite.html";
+    document.addEventListener("DOMContentLoaded", () => {
+      const authBtn = document.getElementById("auth-btn");
+      if (!authBtn) {
+        console.error("auth-btn 요소를 찾을 수 없습니다.");
       } else {
-        alert("로그인 후 일기 작성이 가능합니다.");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        authBtn.textContent = isLoggedIn ? "로그아웃" : "로그인";
+        authBtn.addEventListener("click", () => {
+          if (isLoggedIn) {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userId");
+            window.location.reload();
+          } else {
+            window.location.href = "/frontHTML/loginPage.html";
+          }
+        });
       }
-    });
 
-    let diaries = [];
-    let currentPage = 1;
-    const diariesPerPage = 5;
-
-    function renderDiaries(page) {
-      const container = document.getElementById("diary-container");
-      container.innerHTML = ""; // 초기화
-
-      const startIndex = (page - 1) * diariesPerPage;
-      const endIndex = page * diariesPerPage;
-      const currentDiaries = diaries.slice(startIndex, endIndex);
-
-      currentDiaries.forEach((diary) => {
-        const diaryDiv = document.createElement("div");
-        diaryDiv.classList.add("diary-box");
-
-        // 날짜 형식을 수정
-        const formattedDate = diary.createdAt
-          ? new Date(diary.createdAt).toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          : "날짜 없음";
-
-        diaryDiv.innerHTML = `
-          <h2 class="diary-title">${diary.title}</h2>
-          <p class="diary-date">${formattedDate}</p>
-          <p class="diary-content">${diary.content}</p>
-          <div class="diary-footer">
-          
-            <button class="delete-diary-btn" data-id="${diary.id}">삭제</button>
-          </div>
-        `;
-        container.appendChild(diaryDiv);
-      });
-
-      // 페이지 버튼 상태 업데이트
-      document.getElementById("prev-btn").disabled = page === 1;
-      document.getElementById("next-btn").disabled = endIndex >= diaries.length;
-
-      addDiaryEventListeners(); // 수정/삭제 버튼 이벤트 리스너 추가
-    }
-
-    function addDiaryEventListeners() {
-      document.querySelectorAll(".edit-diary-btn").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const diaryId = event.target.dataset.id;
-          const diary = diaries.find((d) => d.id === parseInt(diaryId));
-
-          if (diary) {
-            localStorage.setItem("editDiary", JSON.stringify(diary));
+      const writeDiaryBtn = document.getElementById("write-diary-btn");
+      if (writeDiaryBtn) {
+        writeDiaryBtn.addEventListener("click", () => {
+          if (localStorage.getItem("isLoggedIn")) {
             window.location.href = "/frontHTML/diaryWrite.html";
+          } else {
+            alert("로그인 후 일기 작성이 가능합니다.");
           }
         });
-      });
+      }
 
-      document.querySelectorAll(".delete-diary-btn").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const diaryId = event.target.dataset.id;
+      let diaries = [];
+      let currentPage = 1;
+      const diariesPerPage = 5;
 
-          if (confirm("정말로 이 일기를 삭제하시겠습니까?")) {
-            deleteDiary(diaryId);
-          }
+      function renderDiaries(page) {
+        const container = document.getElementById("diary-container");
+        container.innerHTML = ""; 
+
+        const startIndex = (page - 1) * diariesPerPage;
+        const endIndex = page * diariesPerPage;
+        const currentDiaries = diaries.slice(startIndex, endIndex);
+
+        currentDiaries.forEach((diary) => {
+          const diaryDiv = document.createElement("div");
+          diaryDiv.classList.add("diary-box");
+
+          const formattedDate = diary.createdAt
+            ? new Date(diary.createdAt).toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : "날짜 없음";
+
+          diaryDiv.innerHTML = `
+            <h2 class="diary-title">${diary.title}</h2>
+            <p class="diary-date">${formattedDate}</p>
+            <p class="diary-content">${diary.content}</p>
+            <div class="diary-footer">
+              <button class="edit-diary-btn" data-id="${diary.id}">수정</button>
+              <button class="delete-diary-btn" data-id="${diary.id}">삭제</button>
+            </div>
+          `;
+          container.appendChild(diaryDiv);
         });
-      });
-    }
 
-    function deleteDiary(diaryId) {
-      const token = localStorage.getItem("token");
+        document.getElementById("prev-btn").disabled = page === 1;
+        document.getElementById("next-btn").disabled = endIndex >= diaries.length;
 
-      fetch(`http://127.0.0.1:8080/api/diaries/${diaryId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error("일기 삭제 실패");
-          return response.json();
-        })
-        .then(() => {
-          diaries = diaries.filter((diary) => diary.id !== parseInt(diaryId));
-          renderDiaries(currentPage);
-          alert("일기가 삭제되었습니다.");
-        })
-        .catch((error) => {
-          console.error("일기 삭제 중 오류 발생:", error);
-          alert("일기가 삭제되었습니다.");
-          location.reload();
+        addDiaryEventListeners();
+      }
+
+      function addDiaryEventListeners() {
+        document.querySelectorAll(".edit-diary-btn").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            const diaryId = event.target.dataset.id;
+            const diary = diaries.find((d) => d.id === parseInt(diaryId));
+            if (diary) {
+              localStorage.setItem("editDiary", JSON.stringify(diary));
+              window.location.href = "/frontHTML/diaryWrite.html";
+            }
+          });
         });
-    }
 
-    function fetchDiaries() {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        window.location.href = "/frontHTML/loginPage.html";
-        return;
-      }
-
-      fetch('http://127.0.0.1:8080/api/diaries', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error("데이터 불러오기 실패");
-          return response.json();
-        })
-        .then((data) => {
-          diaries = data;
-          diaries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          renderDiaries(currentPage);
-        })
-        .catch((error) => {
-          console.error("API 호출 에러:", error);
-          alert("데이터를 불러오는 중 오류가 발생했습니다.");
+        document.querySelectorAll(".delete-diary-btn").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            const diaryId = event.target.dataset.id;
+            if (confirm("정말로 이 일기를 삭제하시겠습니까?")) {
+              deleteDiary(diaryId);
+            }
+          });
         });
-    }
-
-    document.getElementById("prev-btn").addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderDiaries(currentPage);
       }
-    });
 
-    document.getElementById("next-btn").addEventListener("click", () => {
-      if (currentPage * diariesPerPage < diaries.length) {
-        currentPage++;
-        renderDiaries(currentPage);
+      function deleteDiary(diaryId) {
+        fetch(`http://127.0.0.1:8080/api/diaries/${diaryId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+          .then((response) => response.ok ? response.json() : Promise.reject("삭제 실패"))
+          .then(() => {
+            diaries = diaries.filter((diary) => diary.id !== parseInt(diaryId));
+            renderDiaries(currentPage);
+          })
+          .catch((error) => alert("일기를 삭제하는 중 문제가 발생했습니다."));
       }
-    });
 
-    document.getElementById("category-filter").addEventListener("change", (event) => {
-      const selectedCategory = event.target.value;
-      currentPage = 1;
-      if (selectedCategory === "all") {
-        renderDiaries(currentPage);
-      } else {
-        renderDiaries(currentPage, diaries.filter((d) => d.category === selectedCategory));
+      function fetchDiaries() {
+        fetch('http://127.0.0.1:8080/api/diaries', {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+          .then(response => response.json())
+          .then(data => {
+            diaries = data;
+            diaries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            renderDiaries(currentPage);
+          });
       }
-    });
 
-    fetchDiaries();
+      fetchDiaries();
+    });
   </script>
 </body>
 </html>
