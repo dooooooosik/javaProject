@@ -58,7 +58,7 @@
   .title {
     font-size: 3rem;
     font-family: 'RiaSans', sans-serif;
-    margin-bottom: 2rem;
+    margin-bottom: 1.7rem;
   }
   
   .user-menu {
@@ -79,7 +79,8 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-  }
+    margin-top: 10px;
+}
   
   .top-bar-button:hover {
     background-color: #7E57C2;
@@ -87,20 +88,22 @@
   
   /* Form Container Styling */
   .form-container {
-    border: 1.5px solid #ffffff; /* 테두리 추가 */
+    border: 1.5px solid #ffffff; 
     background: rgba(255, 255, 255, 0.2);
-    padding: 15px 30px 10px 30px;
+    padding: 15px 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 68rem;
-    height: 41rem;
-    text-align: center;
-  }
+    width: 70rem;
+    height: 43rem;
+}
   
-  .form-container h2 {
-    font-size: 1.5rem;
-    font-family: 'Gumi', sans-serif;
-  }
+.form-container h2 {
+  font-size: 1.5rem;
+  font-family: 'Gumi', sans-serif;
+  margin-bottom: 20px;
+  text-align: center; /* 중앙 정렬 */
+  padding-bottom: 20px;
+}
   
   #post-form {
     display: flex;
@@ -108,21 +111,19 @@
   }
   
   #dream-h1 {
-    width: 98%; /* 입력 필드 가로 길이 */
-    height: 40px; /* 입력 필드 높이 */
-    padding: 10px; /* 입력 필드 내부 여백 */
-    font-size: 1rem; /* 글자 크기 */
-    border-radius: 5px; /* 모서리를 둥글게 */
-    border: 1.5px solid #ffffff; /* 테두리 색상과 두께 */
-    outline: none; /* 포커스 시 파란색 테두리 제거 */
-    background-color: #fff; /* 배경색 */
-    color: #333; /* 글자 색상 */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* 입력 필드에 그림자 추가 */
+    width: 1098px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    border: 1px solid #ddd;
+    outline: none;
   }
   
   #dream-h1::placeholder {
-    color: #bbb; /* Placeholder(힌트 텍스트) 글자 색상 */
+    color: #bbb; 
   }
+
 .tlqkf{
     padding-top: 10px;
     text-align: left;
@@ -144,19 +145,19 @@
     padding-top: 1rem;
   }
   
-  textarea {
-    height: 20rem; /* 고정 높이 */
-    max-height: 20rem; /* 최대 높이를 고정 */
-    overflow-y: auto; /* 세로 스크롤 활성화 */
+  textarea  {
+    height: 360px;
+    overflow-y: auto;
     border-radius: 5px;
     padding: 15px;
     font-size: 1rem;
     border: none;
     outline: none;
-    resize: none; /* 사용자가 직접 크기 변경 불가 */
+    resize: none;
     background-color: #fff;
     color: #333;
-  }
+    margin-bottom: 20px;
+}
   
   textarea::placeholder {
     color: #bbb;
@@ -176,7 +177,6 @@
   }
   
   button {
-    margin-top: -100px;
     padding: 10px;
     font-size: 1rem;
     border: none;

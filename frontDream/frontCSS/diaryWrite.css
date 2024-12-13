@@ -140,14 +140,15 @@ main {
 }
 
 #dream-content {
-    height: 210px;
+    height: 340px;
     min-height: 150px;
     overflow-y: auto;
     background-color: white;
     color: #333;
     resize: none;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
 }
+
 #category {
     width: 1120px;
     height: 40px;
