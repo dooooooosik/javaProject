@@ -18,14 +18,13 @@
   </header>
 
   <div class="write-post-wrap">
+    <button id="all-posts-btn">전체 게시글 보기</button>
     <button id="my-posts-btn">내 게시글 보기</button>
     <button id="write-post-btn">게시글 작성하기</button>
   </div>
   
   <main>
-    <div id="post-container" class="post-container">
-      <!-- 게시글 렌더링 -->
-    </div>
+    <div id="post-container" class="post-container"></div>
 
     <div class="pagination">
       <button id="prev-btn" class="pagination-btn" disabled>이전</button>
@@ -34,6 +33,12 @@
   </main>
 
   <script>
+    let currentPage = 1; 
+    const postsPerPage = 10; 
+    let allPosts = []; // 모든 게시글을 담는 배열
+
+    const token = localStorage.getItem("token");
+
     // 로그인 상태 확인
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const authBtn = document.getElementById("auth-btn");
@@ -42,7 +47,7 @@
       authBtn.textContent = "로그아웃";
       authBtn.addEventListener("click", () => {
         localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("userId"); // 로그아웃 시 userId도 제거
+        localStorage.removeItem("userId");
         window.location.reload();
       });
     } else {
@@ -56,113 +61,150 @@
     const writePostBtn = document.getElementById("write-post-btn");
     writePostBtn.addEventListener("click", () => {
       if (isLoggedIn) {
-        window.location.href = "/frontHTML/communityWrite.html"; // 게시글 작성 페이지로 이동
+        window.location.href = "/frontHTML/communityWrite.html";
       } else {
-        alert("로그인 후 글 작성이 가능합니다."); // 경고 문구 표시
+        alert("로그인 후 글 작성이 가능합니다.");
       }
+    });
+
+    // 전체 게시글 가져오기
+    const allPostsBtn = document.getElementById("all-posts-btn");
+    allPostsBtn.addEventListener("click", () => {
+      fetchAllPosts();
     });
 
     // 내 게시글 보기 버튼 동작
     const myPostsBtn = document.getElementById("my-posts-btn");
     myPostsBtn.addEventListener("click", () => {
       if (isLoggedIn) {
-        const userId = localStorage.getItem("userId"); // 로그인한 유저의 ID 가져오기
-        renderPosts(currentPage, userId); // 내 게시글 렌더링
+        fetchMyPosts();
       } else {
-        alert("로그인 후 이용 가능한 기능입니다."); // 경고 문구
+        alert("로그인 후 이용 가능한 기능입니다.");
       }
     });
 
+    // 전체 게시글 가져오기
+    function fetchAllPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts; 
+        currentPage = 1;
+        renderPosts(); 
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("전체 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
+    // 내 게시글 가져오기
+    function fetchMyPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts/myposts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts;
+        currentPage = 1;
+        renderPosts();
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("내 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
     // 게시글 렌더링 함수
-    function renderPosts(page, userId = null) {
+    function renderPosts() {
       const container = document.getElementById("post-container");
-      container.innerHTML = ""; // 초기화
+      container.innerHTML = "";
 
-      const startIndex = (page - 1) * postsPerPage;
-      const endIndex = page * postsPerPage;
-      let filteredPosts = posts;
+      const startIndex = (currentPage - 1) * postsPerPage;
+      const endIndex = currentPage * postsPerPage;
+      const currentPosts = allPosts.slice(startIndex, endIndex);
 
-      // 내 게시글만 보기일 경우 필터링
-      if (userId) {
-        filteredPosts = posts.filter(post => post.userId === userId);
+      if (!currentPosts || currentPosts.length === 0) {
+        container.innerHTML = "<p>게시글이 없습니다.</p>";
+        return;
       }
 
-      const currentPosts = filteredPosts.slice(startIndex, endIndex);
-
-      currentPosts.forEach((post) => {
+      currentPosts.forEach(post => {
         const postDiv = document.createElement("div");
         postDiv.classList.add("post-box");
         postDiv.innerHTML = `
           <h2 class="post-title">${post.title}</h2>
+          <p class="post-author">작성자: ${post.username}</p>
           <p class="post-content">${post.content}</p>
           <div class="post-footer">
-            ${post.userId === localStorage.getItem("userId") ? `
-              <button class="edit-btn" data-id="${post.id}">수정</button>
-              <button class="delete-btn" data-id="${post.id}">삭제</button>
-            ` : ''}
+            <button class="edit-btn" data-id="${post.id}">수정</button>
+            <button class="delete-btn" data-id="${post.id}">삭제</button>
           </div>
         `;
         container.appendChild(postDiv);
       });
 
-      document.getElementById("prev-btn").disabled = page === 1;
-      document.getElementById("next-btn").disabled = endIndex >= filteredPosts.length;
+      updatePaginationButtons();
     }
 
-    // 수정/삭제 버튼 동작
-    document.addEventListener("click", (event) => {
-      if (event.target.classList.contains("edit-btn")) {
-        const postId = event.target.getAttribute("data-id");
-        const post = posts.find((p) => p.id == postId);
-        if (post) {
-          localStorage.setItem("editPost", JSON.stringify(post));
-          window.location.href = "/frontHTML/communityWrite.html"; // 작성 페이지로 이동
-        }
-      }
+    function updatePaginationButtons() {
+      document.getElementById("prev-btn").disabled = currentPage === 1;
+      document.getElementById("next-btn").disabled = currentPage * postsPerPage >= allPosts.length;
+    }
 
-      if (event.target.classList.contains("delete-btn")) {
-        const postId = event.target.getAttribute("data-id");
-        if (confirm("정말 삭제하시겠습니까?")) {
-          const index = posts.findIndex((p) => p.id == postId);
-          if (index !== -1) {
-            posts.splice(index, 1); // 데이터 삭제
-            renderPosts(currentPage); // 렌더링 업데이트
-          }
-        }
-      }
-    });
-
-    // 페이지네이션 이벤트 리스너 추가
     document.getElementById("prev-btn").addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        renderPosts(currentPage);
+        renderPosts();
       }
     });
 
     document.getElementById("next-btn").addEventListener("click", () => {
-      if (currentPage * postsPerPage < posts.length) {
+      if (currentPage * postsPerPage < allPosts.length) {
         currentPage++;
-        renderPosts(currentPage);
+        renderPosts();
       }
     });
 
-    // 임시 데이터
-    const posts = [
-      { id: 1, title: "나 오늘 완전 개꿈꿨음", content: "앙아앙아아아아앙...", userId: "user1" },
-      { id: 2, title: "좋은 날씨", content: "햇살이 좋아서 산책했다.", userId: "user2" }
-    ];
+    document.addEventListener("click", (event) => {
+      if (event.target.classList.contains("edit-btn")) {
+        const postId = event.target.getAttribute("data-id");
 
-    let currentPage = 1;
-    const postsPerPage = 10;
+        fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` },
+        })
+        .then(response => response.json())
+        .then(post => {
+          localStorage.setItem("editPost", JSON.stringify(post));
+          localStorage.setItem("isEditing", true);
+          window.location.href = "/frontHTML/communityWrite.html";
+        })
+        .catch(error => console.error("수정할 게시글 조회 실패:", error));
+      }
 
-    // 로그인 시 userId 저장
-    if (isLoggedIn && !localStorage.getItem("userId")) {
-      localStorage.setItem("userId", "user1"); // 예시: 로그인한 유저 ID 저장
-    }
+      if (event.target.classList.contains("delete-btn")) {
+        const postId = event.target.getAttribute("data-id");
 
-    // 초기 게시글 렌더링
-    renderPosts(currentPage);
+        if (confirm("정말 삭제하시겠습니까?")) {
+          fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` },
+          })
+          .then(() => {
+            alert("게시글이 삭제되었습니다.");
+            fetchAllPosts(); 
+          })
+          .catch(error => console.error("게시글 삭제 실패:", error));
+        }
+      }
+    });
+
+    fetchAllPosts();
   </script>
 </body>
 </html>

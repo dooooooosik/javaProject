@@ -112,7 +112,7 @@ body {
     margin: 0 auto; /* 중앙 정렬 */
   }
   
-#write-post-btn, #my-posts-btn {
+#write-post-btn,#all-posts-btn, #my-posts-btn {
   background-color: #501b9a;
   border: none;
   border-radius: 5px;

@@ -14,57 +14,77 @@
     <h1>검색 결과</h1>
   </header>
   <main>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="키워드를 입력하세요" />
+    </div>
     <section id="result-container">
       <div id="result-message"></div>
       <div id="result-items"></div>
     </section>
   </main>
   <script>
-    // 임시 데이터
-    const mockData = [
-      { keyword: "똥", title: "똥 꿈 해몽", description: "똥 꿈은 재물운이 상승하는 길몽으로 해석됩니다." },
-      { keyword: "똥", title: "똥 치우는 꿈", description: "똥을 치우는 꿈은 불필요한 걱정과 문제가 해결됨을 의미합니다." },
-      { keyword: "고양이", title: "고양이 꿈 해몽", description: "고양이가 나오는 꿈은 친밀함과 독립심을 상징합니다." },
-      { keyword: "비행기", title: "비행기 꿈 해몽", description: "비행기 꿈은 새로운 시작과 모험을 나타냅니다." }
-    ];
-
-    // URL 파라미터에서 키워드 추출
     const urlParams = new URLSearchParams(window.location.search);
     const keyword = urlParams.get("keyword");
 
-    // 결과 컨테이너 요소
-    const resultContainer = document.getElementById("result-container");
     const resultMessage = document.getElementById("result-message");
     const resultItems = document.getElementById("result-items");
+    const resultContainer = document.getElementById("result-container");
 
     if (keyword) {
-      // 키워드와 일치하는 데이터 필터링
-      const filteredData = mockData.filter(item => item.keyword === keyword);
-
-      // 결과 표시
-      displayResults(filteredData, keyword);
-    } else {
-      resultMessage.innerHTML = "<p>키워드가 제공되지 않았습니다.</p>";
-    }
-
-    function displayResults(data, keyword) {
-      resultMessage.innerHTML = `<p>'${keyword}'에 대한 검색 결과입니다.</p>`;
-
-      if (data.length === 0) {
-        resultItems.innerHTML = "<p>검색 결과가 없습니다.</p>";
-        return;
+      document.getElementById("search-input").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        const keyword = event.target.value.trim();
+  
+        if (!keyword) {
+          alert("키워드를 입력해주세요.");
+          return;
+        }
+  
+        // 검색 결과 페이지로 이동
+        window.location.href = `../frontHTML/searchResult.html?keyword=${encodeURIComponent(keyword)}`;
       }
-
-      data.forEach(item => {
-        const detailDiv = document.createElement("div");
-        detailDiv.classList.add("result-item");
-        detailDiv.innerHTML = `
-          <div class="result-title"><h3>${item.title}</h3></div>
-          <div class="result-description"><p>${item.description}</p></div>
-        `;
-        resultItems.appendChild(detailDiv);
+    });
+  // 백엔드 API 호출
+    fetch(`http://127.0.0.1:8080/api/dream/search?keyword=${encodeURIComponent(keyword)}`)
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            throw new Error(errorData.error || "API 요청 실패");
+          });
+        }
+        return response.json(); // JSON 형식 응답 처리
+      })
+      .then(data => {
+        if (data.result) {
+          displayResults(data.result, keyword);
+        } else {
+          resultMessage.innerHTML = `<p>결과를 처리할 수 없습니다.</p>`;
+        }
+      })
+      .catch(error => {
+        resultMessage.innerHTML = `<p>오류 발생: ${error.message}</p>`;
       });
+  } else {
+    resultMessage.innerHTML = "<p>키워드가 제공되지 않았습니다.</p>";
+  }
+
+  // 결과를 화면에 표시
+  function displayResults(data, keyword) {
+    resultMessage.innerHTML = `<p>'${keyword}'에 대한 검색 결과입니다.</p>`;
+
+    if (!data || data.trim() === "") {
+      resultItems.innerHTML = "<p>검색 결과가 없습니다.</p>";
+      return;
     }
+
+    const detailDiv = document.createElement("div");
+    detailDiv.classList.add("result-item");
+    detailDiv.innerHTML = `
+      <div class="result-title"><h3>해몽 결과</h3></div>
+      <div class="result-description"><p>${data}</p></div>
+    `;
+    resultItems.appendChild(detailDiv);
+  }
   </script>
 </body>
 </html>

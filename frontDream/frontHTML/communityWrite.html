@@ -19,84 +19,131 @@
 
   <main>
     <div class="form-container">
-      <h2>새로운 게시글 작성하기</h2>
+      <h2>게시글 작성/수정</h2>
       <form id="post-form">
+        
+        <div class="tlqkf">
+          <label for="dream-h1">제목</label>
+        </div>
+        <input type="text" id="dream-h1" placeholder="제목을 입력하세요">
+          
         <div class="tlqkf">
           <label for="dream-content">꿈 내용</label>
         </div>
         <textarea id="dream-content" placeholder="게시글 내용을 작성하세요"></textarea>
-        <div>
-          <div class="tlqkf">
-            <label for="category">카테고리</label>
-          </div>
-          <select id="category">
-            <option value="" disabled selected>카테고리를 선택하세요</option>
-            <option value="신체">신체</option>
-            <option value="동물">동물</option>
-            <option value="음식">음식</option>
-            <option value="장소">장소</option>
-            <option value="인물">인물</option>
-            <option value="식물">식물</option>
-            <option value="행동">행동</option>
-            <option value="자연">자연</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
+        
         <button type="button" id="submit-btn">작성 완료</button>
       </form>
     </div>
   </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const authBtn = document.getElementById("auth-btn");
+  document.addEventListener("DOMContentLoaded", () => {
+    const authBtn = document.getElementById("auth-btn");
 
-      // 로그인 상태 확인
-      const isLoggedIn = localStorage.getItem("isLoggedIn");
-      if (isLoggedIn) {
-        authBtn.textContent = "로그아웃";
-        authBtn.addEventListener("click", () => {
-          localStorage.removeItem("isLoggedIn");
-          window.location.reload();
-        });
-      } else {
-        authBtn.textContent = "로그인";
-        authBtn.addEventListener("click", () => {
-          window.location.href = "/frontHTML/loginPage.html";
-        });
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "/frontHTML/loginPage.html";
+      });
+    }
+
+    const submitBtn = document.getElementById("submit-btn");
+    const titleInput = document.getElementById("dream-h1");
+    const contentInput = document.getElementById("dream-content");
+
+    // **수정 상태 확인**
+    const isEditing = localStorage.getItem("isEditing");
+    const editPost = JSON.parse(localStorage.getItem("editPost"));
+
+    if (isEditing && editPost) {
+      // **수정 모드**일 경우, 기존 게시글 내용을 입력 필드에 채움
+      titleInput.value = editPost.title;
+      contentInput.value = editPost.content;
+      submitBtn.textContent = "수정 완료"; // 버튼 텍스트 변경
+    }
+
+    submitBtn.addEventListener("click", () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/frontHTML/loginPage.html";
+        return;
       }
 
-      // 게시글 작성 처리
-      const submitBtn = document.getElementById("submit-btn");
-      submitBtn.addEventListener("click", () => {
-        const content = document.getElementById("dream-content").value.trim();
-        const category = document.getElementById("category").value;
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
 
-        if (!content || !category) {
-          alert("모든 필드를 채워주세요.");
-          return;
-        }
+      if (!title || !content) {
+        alert("모든 필드를 채워주세요.");
+        return;
+      }
 
-        // POST 요청 (API 연동, 주석 처리)
-        /*
-        fetch('/api/posts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content, category }),
+      if (isEditing && editPost) {
+        // **수정 기능 (PUT 요청)**
+        fetch(`http://127.0.0.1:8080/api/posts/${editPost.id}`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            title, 
+            content 
+          }),
         })
-          .then(response => {
-            if (!response.ok) throw new Error("게시글 작성 실패");
-            alert("게시글 작성 완료!");
-            window.location.href = "/frontHTML/communityPage.html";
-          })
-          .catch(error => console.error("API 호출 에러:", error));
-        */
+        .then(response => {
+          if (!response.ok) throw new Error("게시글 수정 실패");
+          return response.json();
+        })
+        .then(data => {
+          alert("게시글 수정 완료!");
+          // **수정 상태 초기화**
+          localStorage.removeItem("editPost");
+          localStorage.removeItem("isEditing");
+          window.location.href = "/frontHTML/communityPage.html";
+        })
+        .catch(error => {
+          console.error("API 호출 에러:", error);
+          alert("게시글 수정 중 오류 발생: " + error.message);
+        });
 
-        // 임시 동작
-        alert("게시글 작성 완료!");
-        window.location.href = "/frontHTML/communityPage.html";
-      });
+      } else {
+        // **작성 기능 (POST 요청)**
+        fetch('http://127.0.0.1:8080/api/posts', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            title, 
+            content 
+          }),
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("게시글 작성 실패");
+          return response.json();
+        })
+        .then(data => {
+          alert("게시글 작성 완료!");
+          window.location.href = "/frontHTML/communityPage.html";
+        })
+        .catch(error => {
+          console.error("API 호출 에러:", error);
+          alert("게시글 작성 중 오류 발생: " + error.message);
+        });
+      }
     });
+  });
   </script>
 </body>
 </html>
