@@ -127,11 +127,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) {
         throw new Error(`삭제 실패! 상태 코드: ${response.status}`);
       }
-      return response.status === 204 ? null : response.json(); // 🔥 204일 때 json 파싱 건너뜀
+      return response.status === 204 ? null : response.json();
     })
     .then(() => {
       alert("일기 삭제 완료!");
-      fetchDiaries();  // 삭제 후 일기 목록 새로고침
+      fetchDiaries(); 
     })
     .catch(error => {
       alert("삭제 실패!");
@@ -159,8 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchDiaries();
 });
-
-
   </script>
 </body>
 </html>

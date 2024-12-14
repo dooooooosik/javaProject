@@ -110,6 +110,7 @@ main{
 
 #write-diary-btn:hover {
   background-color: #7E57C2;
+  transform: scale(1.1);
 }
 
 .diary-container {
@@ -132,16 +133,19 @@ main{
 .diary-title {
   font-size: 1.5rem;
   font-weight: bold;
+  font-family: 'Gumi', sans-serif;
 }
 
 .diary-date {
   font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
   color: #bbb;
   margin-bottom: 10px;
 }
 
 .diary-content {
   font-size: 1rem;
+  font-family: 'Gumi', sans-serif;
 }
 
 .pagination {
@@ -171,12 +175,17 @@ main{
 
 .edit-diary-btn, .delete-diary-btn {
   font-size: 0.9rem;
+  font-weight: bold;
   color: #ffffff; /* 텍스트 색상 */
   cursor: pointer;
   background: none; /* 배경색 제거 */
   border: none; /* 테두리 제거 */
   padding: 0; /* 기본 패딩 제거 */
   transition: color 0.2s ease; /* 색상 변화 효과 */
+}
+.edit-diary-btn:hover, .delete-diary-btn:hover{
+  color: #dddddd;
+  transform: scale(1.1);
 }
 
 .diary-footer {
