@@ -53,62 +53,7 @@
       emailInput.addEventListener("blur", async () => {
         const email = emailInput.value.trim();
         if (!email) return;
-
-        // 이메일 중복 확인 요청 (API 연동 주석 처리)
-        /*
-        try {
-          const response = await fetch("http://127.0.0.1:3000/api/auth/check-email", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          });
-
-          const data = await response.json();
-          if (data.exists) {
-            emailCheck.textContent = "이미 사용 중인 이메일입니다.";
-            emailCheck.style.color = "red";
-          } else {
-            emailCheck.textContent = "사용 가능한 이메일입니다.";
-            emailCheck.style.color = "green";
-          }
-        } catch (error) {
-          console.error("이메일 중복 확인 중 오류:", error);
-          emailCheck.textContent = "오류 발생, 다시 시도해주세요.";
-          emailCheck.style.color = "red";
-        }
-        */
       });
-
-      // 닉네임 중복 확인
-      nicknameInput.addEventListener("blur", async () => {
-        const nickname = nicknameInput.value.trim();
-        if (!nickname) return;
-
-        // 닉네임 중복 확인 요청 (API 연동 주석 처리)
-        /*
-        try {
-          const response = await fetch("http://127.0.0.1:3000/api/auth/check-nickname", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nickname }),
-          });
-
-          const data = await response.json();
-          if (data.exists) {
-            nicknameCheck.textContent = "이미 사용 중인 닉네임입니다.";
-            nicknameCheck.style.color = "red";
-          } else {
-            nicknameCheck.textContent = "사용 가능한 닉네임입니다.";
-            nicknameCheck.style.color = "green";
-          }
-        } catch (error) {
-          console.error("닉네임 중복 확인 중 오류:", error);
-          nicknameCheck.textContent = "오류 발생, 다시 시도해주세요.";
-          nicknameCheck.style.color = "red";
-        }
-        */
-      });
-
       // 회원가입 폼 제출 처리
       document.getElementById("signup-form").addEventListener("submit", async function(event) {
         event.preventDefault();
@@ -122,8 +67,6 @@
           alert("비밀번호가 일치하지 않습니다.");
           return;
         }
-
-        // 회원가입 요청 (API 연동 주석 처리)
         
         try {
         
