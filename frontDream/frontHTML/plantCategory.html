@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>식물과 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/plantCategory.css">
+</head>
+<body>
+  <a href="categoryPage.html" class="back-link">← 뒤로 가기</a>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">식물과 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터가 렌더링됩니다 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+      {
+        title: "큰 나무가 뿌리째 쓰러져 있는 것을 보는 꿈",
+        description: "큰 인재가 장기에서 은퇴하는 것을 보거나 사회계가 운용내에 빠질 것을 암시하는 꿈이다."
+      },
+      {
+        title: "마당에 정원수가 무성하게 자라는 꿈",
+        description: "가정이 화목하고 질서가 화합하여 안정감을 느끼며 재물과 명예가 높아지는 즐거움이 얻어진다."
+      },
+      {
+        title: "복숭아나무 사이를 걸어가다 향기에 취해 비몽사몽이 된 꿈",
+        description: "색다른 분위기가 있는 곳에서 잠시 황홀경에 빠진다."
+      },
+      {
+        title: "산봉우리 위에 상상치 않게 크게 피어 있는 꿈",
+        description: "꿈속에서 학문적 연구, 진로 및 대권과 연관된 길몽이다."
+      },
+      {
+        title: "하늘에서 별이 쏟아져 붉은 장미꽃이 되는 꿈",
+        description: "아름다운 예술작품을 창작하게 된다. 오래된 문헌에서 새로운 자료를 발견한다."
+      },
+      {
+        title: "물줄기가 화려히 흐르는 강가에서 꽃 한 송이를 꺾는 꿈",
+        description: "소식이나 소문이 있는 꿈이다."
+      },
+      {
+        title: "큰 바위 밑에 쑥부쟁이가 곱게 피어 있는 꿈",
+        description: "윗사람의 도움으로 뜻밖의 일을 성취하고 금시발복된다."
+      },
+      {
+        title: "뿌리가 든든하게 내려뻗은 꿈",
+        description: "가문의 기틀이 탄탄해질 것을 암시하는 꿈이다."
+      },
+      {
+        title: "예쁜 꽃꽂이를 껴안고 집으로 돌아오는 꿈",
+        description: "문화적인 성취를 이루는 길몽이다."
+      },
+      {
+        title: "깻잎이 푸르고 싱싱하게 보이는 꿈",
+        description: "학업과 재수생은 머리가 시원하고 좋아진다."
+      }
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>

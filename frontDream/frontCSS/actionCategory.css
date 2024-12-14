@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'RiaSans';
+    src: url('./font/RiaSans-ExtraBold.ttf') format('truetype'),
+         url('./font/RiaSans-ExtraBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Gumi';
+    src: url('./font/GumiDotum.otf') format('opentype'),
+         url('./font/GumiDotum.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+main {    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh; /* 화면 전체 높이 사용 */
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+  }
+  
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+  }
+  
+  .back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .user-menu {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 20px;
+    padding-bottom: 50px;
+  }
+  
+  .top-bar-button {
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #501b9a; /* 진한 보라색 */
+  }
+  
+  .top-bar-button:hover {
+    text-decoration: underline;
+    background-color: #7E57C2; /* 연한 보라색 */
+  }
+  
+  .title {
+    font-family: 'Riasans', sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 20px 0;
+    padding-bottom: 30px;
+    color: white;
+  }
+
+  .dream-box {
+    width: 100%; /* 부모 컨테이너의 너비를 따름 */
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dream-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 70rem; 
+    margin: 0 auto;
+  }
+  
+  .dream-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Gumi', sans-serif;
+    margin-bottom: 10px;
+    color: white;
+  }
+  
+  .dream-description {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+  }

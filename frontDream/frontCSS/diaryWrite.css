@@ -1,0 +1,179 @@
+@font-face {
+    font-family: 'RiaSans';
+    src: url('./font/RiaSans-ExtraBold.ttf') format('truetype'),
+         url('./font/RiaSans-ExtraBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+  
+@font-face {
+    font-family: 'Gumi';
+    src: url('./font/GumiDotum.otf') format('opentype'),
+         url('./font/GumiDotum.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+    background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+  }
+
+.top-bar {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-family: 'RiaSans', sans-serif;
+    margin-bottom: 1.7rem;
+}
+
+.user-menu {
+    position: absolute;
+    top: 4px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.top-bar-button {
+    background-color: #501b9a;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.top-bar-button:hover {
+    background-color: #7E57C2;
+}
+
+.form-container {
+    border: 1.5px solid #ffffff; 
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 70rem;
+    height: 43rem;
+}
+
+.form-container h2 {
+    font-size: 1.5rem;
+    font-family: 'Gumi', sans-serif;
+    margin-bottom: 20px;
+    text-align: center; /* 중앙 정렬 */
+    padding-bottom: 20px;
+}
+
+#post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.tlqkf label {
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    margin-bottom: 5px;
+}
+
+#dream-h1, #dream-content, #diary-date, #category {
+    width: 1098px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+#dream-h1 {
+    height: 18px;
+    text-align: left;
+    background-color: white;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+#diary-date {
+    height: 18px;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+#dream-content {
+    height: 340px;
+    min-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    color: #333;
+    resize: none;
+    margin-bottom: 18px;
+}
+
+#category {
+    width: 1120px;
+    height: 40px;
+    background-color: white;
+    color: #333;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+textarea::placeholder, #dream-h1::placeholder {
+    color: #bbb;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #501b9a;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #7E57C2;
+}

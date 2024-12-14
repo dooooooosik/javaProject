@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 내가 꾼 꿈은?</title>
+  <link rel="stylesheet" href="/css/mainPage.css">
+</head>
+<body>
+  <div class="background-overlay"></div>
+  <div class="top">
+    <div id="login-container">
+      <!-- 로그인 상태에 따라 동적으로 버튼 표시 -->
+    </div>
+  </div>
+  <div class="container">
+    <h1 class="title">오늘 내가 꾼 꿈은?</h1>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="키워드를 입력하세요" />
+    </div>
+    <div class="card-container">
+      <div class="card" onclick="goToCategoryPage('꿈 해몽')">
+        <img src="../img/그림1.png" alt="꿈 해몽">
+        <div class="card-title">꿈 해몽</div>
+      </div>
+      <div class="card" onclick="goToCategoryPage('꿈 이야기')">
+        <img src="../img/그림2.png" alt="꿈 이야기">
+        <div class="card-title">꿈 이야기</div>
+      </div>
+      <div class="card" onclick="goToCategoryPage('꿈 다이어리')">
+        <img src="../img/그림3.png" alt="꿈 다이어리">
+        <div class="card-title">꿈 다이어리</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 검색 입력 처리
+    document.getElementById("search-input").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        const keyword = event.target.value.trim();
+  
+        if (!keyword) {
+          alert("키워드를 입력해주세요.");
+          return;
+        }
+  
+        // 검색 결과 페이지로 이동
+        window.location.href = `../frontHTML/searchResult.html?keyword=${encodeURIComponent(keyword)}`;
+      }
+    });
+  
+    // 카테고리 페이지로 이동
+    function goToCategoryPage(category) {
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  
+      if (category === "꿈 이야기") {
+        // "꿈 이야기" 클릭 시 communityPage.html로 이동
+        window.location.href = `../frontHTML/communityPage.html`;
+      } else if (category === "꿈 다이어리") {
+        if (!isLoggedIn) {
+          alert("로그인 후 이용 가능합니다."); // 경고 메시지 표시
+          return;
+        }
+        // "꿈 다이어리" 클릭 시 diaryPage.html로 이동
+        window.location.href = `../frontHTML/diaryPage.html`;
+      } else {
+        // 다른 카테고리는 categoryPage.html로 이동
+        window.location.href = `../frontHTML/categoryPage.html?category=${encodeURIComponent(category)}`;
+      }
+    }
+  
+    // 로그인 컨테이너 업데이트 함수
+    async function updateLoginState() {
+      const loginContainer = document.getElementById("login-container");
+      loginContainer.innerHTML = ""; // 기존 내용 초기화
+  
+      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  
+      if (isLoggedIn) {
+        const logoutButton = document.createElement("button");
+        logoutButton.textContent = "로그아웃";
+        logoutButton.className = "top-bar-button"; // 통합된 클래스
+        logoutButton.onclick = () => {
+          localStorage.removeItem("isLoggedIn");
+          window.location.href = "/frontHTML/mainPage.html";
+        };
+        loginContainer.appendChild(logoutButton);
+      } else {
+        const loginLink = document.createElement("a");
+        loginLink.href = "/frontHTML/loginPage.html";
+        loginLink.textContent = "로그인";
+        loginLink.className = "login-button";
+        loginContainer.appendChild(loginLink);
+      }
+    }
+  
+    document.addEventListener("DOMContentLoaded", updateLoginState);
+  </script>
+</body>
+</html>

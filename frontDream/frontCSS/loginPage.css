@@ -1,0 +1,135 @@
+@font-face {
+    font-family: 'RiaSans';
+    src: url('./font/RiaSans-ExtraBold.ttf') format('truetype'),
+         url('./font/RiaSans-ExtraBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Gumi';
+    src: url('./font/GumiDotum.otf') format('opentype'),
+         url('./font/GumiDotum.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body, html {
+    width: 100%;
+    height: 100%; /* 화면 전체 높이 */
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* 전체 컨테이너 */
+  .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  /* 뒤로가기 링크 */
+  .back-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+    padding: 20px; /* 추가: 클릭 영역을 넓히기 위해 패딩 추가 */
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* 로그인 박스 */
+  .login-box {
+    background: white;
+    width: 30rem;
+    height: 23rem;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  /* 로그인 제목 */
+  .login-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #382d86;
+    margin-bottom: 20px;
+    font-family: 'RiaSans', sans-serif;
+  }
+  
+  /* 입력 필드 그룹 */
+  .form-group {
+    margin-bottom: 25px;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-family: 'Gumi', sans-serif;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  /* 로그인 버튼 */
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    background: #8E24AA;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .login-button:hover {
+    background: #6A1B9A;
+  }
+  
+  /* 회원가입 텍스트 */
+  .signup-text {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    font-family: 'Gumi', sans-serif;
+    color: #555;
+  }
+  
+  .signup-link {
+    color: #8E24AA;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>꿈 카테고리</title>
+  <!-- CSS 경로 -->
+  <link rel="stylesheet" href="/css/categoryPage.css">
+</head>
+<body>
+  <a href="mainPage.html" class="back-link">← 뒤로 가기</a>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">오늘 내가 꾼 꿈은?</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="키워드 검색">
+    </div>
+    <div class="category-container">
+      <div class="category" data-category="신체">
+        <div class="category-img">💪</div>
+        <div class="category-text">신체와 관련된 꿈</div>
+      </div>
+      <div class="category" data-category="동물">
+        <div class="category-img">🦊</div>
+        <div class="category-text">동물이 등장하는 꿈</div>
+      </div>
+      <div class="category" data-category="식물">
+        <div class="category-img">☘️</div>
+        <div class="category-text">식물과 관련된 꿈</div>
+      </div>
+      <div class="category" data-category="음식">
+        <div class="category-img">🍱</div>
+        <div class="category-text">음식이 나오는 꿈</div>
+      </div>
+    </div>
+    
+    <br>
+    
+    <div class="category-container">
+      <div class="category" data-category="행동">
+        <div class="category-img">🏃‍♀️</div>
+        <div class="category-text">특정 행동을 하는 꿈</div>
+      </div>
+      <div class="category" data-category="인물">
+        <div class="category-img">👩‍🦰</div>
+        <div class="category-text">어떤 인물이 등장하는 꿈</div>
+      </div>
+      <div class="category" data-category="자연현상">
+        <div class="category-img">🌞</div>
+        <div class="category-text">자연현상과 관련된 꿈</div>
+      </div>
+      <div class="category" data-category="장소">
+        <div class="category-img">🏛</div>
+        <div class="category-text">특정 장소에서의 꿈</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    document.addEventListener("DOMContentLoaded", function () {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      const authBtn = document.getElementById("auth-btn");
+
+      if (isLoggedIn) {
+        // 로그인 상태
+        authBtn.textContent = "로그아웃";
+        authBtn.addEventListener("click", function () {
+          localStorage.removeItem("isLoggedIn");
+          window.location.href = "mainPage.html";
+        });
+      } else {
+        // 비로그인 상태
+        authBtn.textContent = "로그인";
+        authBtn.addEventListener("click", function () {
+          window.location.href = "loginPage.html";
+        });
+      }
+    });
+
+    // 검색창 Enter 키 입력 처리
+    document.getElementById("search-input").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        const keyword = document.getElementById("search-input").value.trim();
+
+        if (!keyword) {
+          alert("검색어를 입력해주세요.");
+          return;
+        }
+
+        // 검색 결과 페이지로 이동
+        window.location.href = `searchResult.html?keyword=${encodeURIComponent(keyword)}`;
+      }
+    });
+
+    // 카테고리 클릭 시 처리
+    document.querySelectorAll(".category").forEach(category => {
+      category.addEventListener("click", function() {
+        const categoryName = this.dataset.category;
+
+        // 카테고리 이름에 따라 HTML 파일로 이동
+        switch (categoryName) {
+          case "신체":
+            window.location.href = "bodyCategory.html";
+            break;
+          case "동물":
+            window.location.href = "animalCategory.html";
+            break;
+          case "식물":
+            window.location.href = "plantCategory.html";
+            break;
+          case "음식":
+            window.location.href = "foodCategory.html";
+            break;
+          case "행동":
+            window.location.href = "actionCategory.html";
+            break;
+          case "인물":
+            window.location.href = "peopleCategory.html";
+            break;
+          case "자연현상":
+            window.location.href = "natureCategory.html";
+            break;
+          case "장소":
+            window.location.href = "placeCategory.html";
+            break;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

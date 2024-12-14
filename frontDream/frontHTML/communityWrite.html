@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>꿈 게시글 작성</title>
+  <link rel="stylesheet" href="/css/communityWrite.css">
+</head>
+<body>
+  <a href="communityPage.html" class="back-link">← 뒤로 가기</a>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+  </header>
+  <div class="top-bar">
+    <h1 class="title">오늘 내가 꾼 꿈은 ?</h1>
+  </div>
+
+  <main>
+    <div class="form-container">
+      <h2>게시글 작성/수정</h2>
+      <form id="post-form">
+        
+        <div class="tlqkf">
+          <label for="dream-h1">제목</label>
+        </div>
+        <input type="text" id="dream-h1" placeholder="제목을 입력하세요">
+          
+        <div class="tlqkf">
+          <label for="dream-content">꿈 내용</label>
+        </div>
+        <textarea id="dream-content" placeholder="게시글 내용을 작성하세요"></textarea>
+        
+        <button type="button" id="submit-btn">작성 완료</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const authBtn = document.getElementById("auth-btn");
+
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "/frontHTML/loginPage.html";
+      });
+    }
+
+    const submitBtn = document.getElementById("submit-btn");
+    const titleInput = document.getElementById("dream-h1");
+    const contentInput = document.getElementById("dream-content");
+
+    // **수정 상태 확인**
+    const isEditing = localStorage.getItem("isEditing");
+    const editPost = JSON.parse(localStorage.getItem("editPost"));
+
+    if (isEditing && editPost) {
+      // **수정 모드**일 경우, 기존 게시글 내용을 입력 필드에 채움
+      titleInput.value = editPost.title;
+      contentInput.value = editPost.content;
+      submitBtn.textContent = "수정 완료"; // 버튼 텍스트 변경
+    }
+
+    submitBtn.addEventListener("click", () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/frontHTML/loginPage.html";
+        return;
+      }
+
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!title || !content) {
+        alert("모든 필드를 채워주세요.");
+        return;
+      }
+
+      if (isEditing && editPost) {
+        // **수정 기능 (PUT 요청)**
+        fetch(`http://127.0.0.1:8080/api/posts/${editPost.id}`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            title, 
+            content 
+          }),
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("게시글 수정 실패");
+          return response.json();
+        })
+        .then(data => {
+          alert("게시글 수정 완료!");
+          // **수정 상태 초기화**
+          localStorage.removeItem("editPost");
+          localStorage.removeItem("isEditing");
+          window.location.href = "/frontHTML/communityPage.html";
+        })
+        .catch(error => {
+          console.error("API 호출 에러:", error);
+          alert("게시글 수정 중 오류 발생: " + error.message);
+        });
+
+      } else {
+        // **작성 기능 (POST 요청)**
+        fetch('http://127.0.0.1:8080/api/posts', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ 
+            title, 
+            content 
+          }),
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("게시글 작성 실패");
+          return response.json();
+        })
+        .then(data => {
+          alert("게시글 작성 완료!");
+          window.location.href = "/frontHTML/communityPage.html";
+        })
+        .catch(error => {
+          console.error("API 호출 에러:", error);
+          alert("게시글 작성 중 오류 발생: " + error.message);
+        });
+      }
+    });
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+@font-face {
+    font-family: 'RiaSans';
+    src: url('./font/RiaSans-ExtraBold.ttf') format('truetype'),
+         url('./font/RiaSans-ExtraBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Gumi';
+    src: url('./font/GumiDotum.otf') format('opentype'),
+         url('./font/GumiDotum.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  body, html {
+    background: linear-gradient(to right, #382d86, #8E24AA, #382d86);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+  }
+
+  .back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .top-bar {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-family: 'RiaSans', sans-serif;
+    margin-bottom: 1.7rem;
+  }
+  
+  .user-menu {
+    position: absolute;
+    top: 4px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .top-bar-button {
+    background-color: #501b9a;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+  
+  .top-bar-button:hover {
+    background-color: #7E57C2;
+  }
+  
+  /* Form Container Styling */
+  .form-container {
+    border: 1.5px solid #ffffff; 
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 70rem;
+    height: 43rem;
+}
+  
+.form-container h2 {
+  font-size: 1.5rem;
+  font-family: 'Gumi', sans-serif;
+  margin-bottom: 20px;
+  text-align: center; /* 중앙 정렬 */
+  padding-bottom: 20px;
+}
+  
+  #post-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #dream-h1 {
+    width: 1098px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    border: 1px solid #ddd;
+    outline: none;
+  }
+  
+  #dream-h1::placeholder {
+    color: #bbb; 
+  }
+
+.tlqkf{
+    padding-top: 10px;
+    text-align: left;
+    margin: 10px 0px 10px 0px;
+}
+#post-form label {
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    text-align: left;
+    margin: 5px;
+    padding-top: 1rem;
+  }
+
+  label {
+    font-size: 1rem;
+    font-family: 'Gumi', sans-serif;
+    text-align: left;
+    margin: 7px;
+    padding-top: 1rem;
+  }
+  
+  textarea  {
+    height: 360px;
+    overflow-y: auto;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    resize: none;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 20px;
+}
+  
+  textarea::placeholder {
+    color: #bbb;
+  }
+  
+  select {
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    color: #bbb;
+  }
+  
+  button {
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #501b9a;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #7E57C2;
+  }

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 내가 꾼 꿈은?</title>
+  <link rel="stylesheet" href="/css/communityPage.css">
+</head>
+<body>
+  <a href="mainPage.html" class="back-link">← 뒤로 가기</a>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">오늘 내가 꾼 꿈은?</h1>
+    </div>
+  </header>
+
+  <div class="write-post-wrap">
+    <button id="all-posts-btn">전체 게시글 보기</button>
+    <button id="my-posts-btn">내 게시글 보기</button>
+    <button id="write-post-btn">게시글 작성하기</button>
+  </div>
+  
+  <main>
+    <div id="post-container" class="post-container"></div>
+
+    <div class="pagination">
+      <button id="prev-btn" class="pagination-btn" disabled>이전</button>
+      <button id="next-btn" class="pagination-btn">다음</button>
+    </div>
+    
+  </main>
+
+  <script>
+    let currentPage = 1; 
+    const postsPerPage = 10; 
+    let allPosts = []; // 모든 게시글을 담는 배열
+
+    const token = localStorage.getItem("token");
+
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userId");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "/frontHTML/loginPage.html";
+      });
+    }
+
+    // 게시글 작성 버튼 동작
+    const writePostBtn = document.getElementById("write-post-btn");
+    writePostBtn.addEventListener("click", () => {
+      if (isLoggedIn) {
+        window.location.href = "/frontHTML/communityWrite.html";
+      } else {
+        alert("로그인 후 글 작성이 가능합니다.");
+      }
+    });
+
+    // 전체 게시글 가져오기
+    const allPostsBtn = document.getElementById("all-posts-btn");
+    allPostsBtn.addEventListener("click", () => {
+      fetchAllPosts();
+    });
+
+    // 내 게시글 보기 버튼 동작
+    const myPostsBtn = document.getElementById("my-posts-btn");
+    myPostsBtn.addEventListener("click", () => {
+      if (isLoggedIn) {
+        fetchMyPosts();
+      } else {
+        alert("로그인 후 이용 가능한 기능입니다.");
+      }
+    });
+
+    // 전체 게시글 가져오기
+    function fetchAllPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts; 
+        currentPage = 1;
+        renderPosts(); 
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("전체 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
+    // 내 게시글 가져오기
+    function fetchMyPosts() {
+      fetch(`http://127.0.0.1:8080/api/posts/myposts`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` },
+      })
+      .then(response => response.json())
+      .then(posts => {
+        allPosts = posts;
+        currentPage = 1;
+        renderPosts();
+      })
+      .catch(error => {
+        console.error("API 호출 에러:", error);
+        alert("내 게시글 조회 중 오류가 발생했습니다.");
+      });
+    }
+
+    // 게시글 렌더링 함수
+    function renderPosts() {
+      const container = document.getElementById("post-container");
+      container.innerHTML = "";
+
+      const startIndex = (currentPage - 1) * postsPerPage;
+      const endIndex = currentPage * postsPerPage;
+      const currentPosts = allPosts.slice(startIndex, endIndex);
+
+      if (!currentPosts || currentPosts.length === 0) {
+        container.innerHTML = "<p>게시글이 없습니다.</p>";
+        return;
+      }
+
+      currentPosts.forEach(post => {
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post-box");
+        postDiv.innerHTML = `
+          <h2 class="post-title">${post.title}</h2>
+          <p class="post-author">작성자: ${post.username}</p>
+          <p class="post-content">${post.content}</p>
+          <div class="post-footer">
+            <button class="edit-btn" data-id="${post.id}">수정</button>
+            <button class="delete-btn" data-id="${post.id}">삭제</button>
+          </div>
+        `;
+        container.appendChild(postDiv);
+      });
+
+      updatePaginationButtons();
+    }
+
+    function updatePaginationButtons() {
+      document.getElementById("prev-btn").disabled = currentPage === 1;
+      document.getElementById("next-btn").disabled = currentPage * postsPerPage >= allPosts.length;
+    }
+
+    document.getElementById("prev-btn").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPosts();
+      }
+    });
+
+    document.getElementById("next-btn").addEventListener("click", () => {
+      if (currentPage * postsPerPage < allPosts.length) {
+        currentPage++;
+        renderPosts();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (event.target.classList.contains("edit-btn")) {
+        const postId = event.target.getAttribute("data-id");
+
+        fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
+          method: "GET",
+          headers: { "Authorization": `Bearer ${token}` },
+        })
+        .then(response => response.json())
+        .then(post => {
+          localStorage.setItem("editPost", JSON.stringify(post));
+          localStorage.setItem("isEditing", true);
+          window.location.href = "/frontHTML/communityWrite.html";
+        })
+        .catch(error => console.error("수정할 게시글 조회 실패:", error));
+      }
+
+      if (event.target.classList.contains("delete-btn")) {
+        const postId = event.target.getAttribute("data-id");
+
+        if (confirm("정말 삭제하시겠습니까?")) {
+          fetch(`http://127.0.0.1:8080/api/posts/${postId}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` },
+          })
+          .then(() => {
+            alert("게시글이 삭제되었습니다.");
+            fetchAllPosts(); 
+          })
+          .catch(error => console.error("게시글 삭제 실패:", error));
+        }
+      }
+    });
+
+    fetchAllPosts();
+
+    function renderPosts() {
+    const container = document.getElementById("post-container");
+    container.innerHTML = "";
+
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = currentPage * postsPerPage;
+    const currentPosts = allPosts.slice(startIndex, endIndex);
+
+    if (!currentPosts || currentPosts.length === 0) {
+      container.innerHTML = "<p>게시글이 없습니다.</p>";
+      return;
+    }
+
+    currentPosts.forEach(post => {
+      const postDiv = document.createElement("div");
+      postDiv.classList.add("post-box");
+      postDiv.setAttribute("data-id", post.id); // post.id 설정
+
+      postDiv.innerHTML = `
+        <h2 class="post-title">${post.title}</h2>
+        <p class="post-author">작성자: ${post.username}</p>
+        <p class="post-content">${post.content}</p>
+        <div class="like-container">
+          <button class="like-button" data-id="${post.id}">♥️</i></button>
+          <span class="like-count" id="like-count-${post.id}">${post.likeCount || 0}</span>
+        </div>
+        <div class="post-footer">
+          <button class="edit-btn" data-id="${post.id}">수정</button>
+          <button class="delete-btn" data-id="${post.id}">삭제</button>
+        </div>
+      `;
+      container.appendChild(postDiv);
+    });
+
+  updatePaginationButtons();
+}
+
+
+  function handleLike(postId) {
+    if (!postId) {
+      console.error("좋아요 처리 중 오류: 유효하지 않은 postId");
+      alert("게시글 ID가 유효하지 않습니다.");
+      return;
+    }
+
+    if (!token) {
+      console.error("좋아요 처리 중 오류: 인증 토큰이 없습니다.");
+      alert("로그인 상태를 확인해주세요.");
+      return;
+    }
+
+    fetch(`http://127.0.0.1:8080/api/posts/${postId}/like`, {
+      method: "POST",
+      headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("좋아요 요청 실패");
+        }
+        return response.json(); // JSON 응답 파싱
+      })
+      .then(data => {
+        if (data && data.likeCount !== undefined) { // 데이터 체크
+          const likeCountSpan = document.getElementById(`like-count-${postId}`);
+          likeCountSpan.textContent = data.likeCount;
+        } else {
+          throw new Error("응답 데이터가 유효하지 않습니다.");
+        }
+      })
+      .catch(error => {
+        console.error("좋아요 처리 중 오류:", error);
+      });
+
+
+  }
+
+
+  // 좋아요 버튼 클릭 이벤트 리스너
+  document.addEventListener("click", event => {
+    if (event.target.classList.contains("like-button")) {
+      const postId = event.target.getAttribute("data-id");
+      console.log("Post ID:", postId); // 디버그 로그 추가
+      if (!postId) {
+        console.error("좋아요 처리 중 오류: 유효하지 않은 postId");
+        alert("게시글 ID가 유효하지 않습니다.");
+        return;
+      }
+      handleLike(postId);
+    }
+  }); 
+
+
+
+  </script>
+</body>
+</html>
