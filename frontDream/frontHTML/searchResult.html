@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 결과</title>
+  <link rel="stylesheet" href="/css/searchResult.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/frontHTML/mainPage.html">메인 페이지로 돌아가기</a>
+    </nav>
+    <h1>검색 결과</h1>
+  </header>
+  <main>
+    <section id="result-container">
+      <div id="result-message"></div>
+      <div id="result-items"></div>
+    </section>
+  </main>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const keyword = urlParams.get("keyword");
+
+    const resultMessage = document.getElementById("result-message");
+    const resultItems = document.getElementById("result-items");
+    
+    if (keyword) {
+      document.title = `${keyword} - 검색 결과`; // 동적으로 제목 변경
+      fetch(`http://localhost:8080/api/dream/search?keyword=${encodeURIComponent(keyword)}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("API 요청 실패");
+          }
+          return response.json(); // JSON 형식으로 응답 처리
+        })
+        .then(data => {
+          displayResults(data, keyword);
+        })
+        .catch(error => {
+          console.error("API 호출 중 에러 발생:", error);
+          resultMessage.innerHTML = `<p>오류 발생: ${error.message}. 관리자에게 문의하세요.</p>`;
+        });
+    } else {
+      resultMessage.innerHTML = "<p>키워드가 제공되지 않았습니다.</p>";
+    }
+
+    function displayResults(data, keyword) {
+      resultMessage.innerHTML = `<p>'${keyword}'에 대한 검색 결과입니다.</p>`;
+
+      if (!data || !data.result) {
+        resultItems.innerHTML = "<p>검색 결과가 없습니다.</p>";
+        return;
+      }
+
+      const detailDiv = document.createElement("div");
+      detailDiv.classList.add("result-item");
+      detailDiv.innerHTML = `
+        <div class="result-title"><h3>해몽 결과</h3></div>
+        <div class="result-description"><p>${data.result}</p></div>
+      `;
+      resultItems.appendChild(detailDiv);
+    }
+  </script>
+</body>
+</html>

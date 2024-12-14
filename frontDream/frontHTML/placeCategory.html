@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>장소와 관련된 꿈</title>
+  <link rel="stylesheet" href="/css/placeCategory.css">
+</head>
+<body>
+  <a href="categoryPage.html" class="back-link">← 뒤로 가기</a>
+  <header>
+    <nav class="user-menu">
+      <button id="auth-btn" class="top-bar-button"></button>
+    </nav>
+    <div class="top-bar">
+      <h1 class="title">장소와 관련된 꿈 해몽</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="dream-container" id="dream-container">
+      <!-- 꿈 해몽 데이터가 렌더링됩니다 -->
+    </div>
+  </main>
+
+  <script>
+    // 로그인 상태 확인
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const authBtn = document.getElementById("auth-btn");
+
+    if (isLoggedIn) {
+      authBtn.textContent = "로그아웃";
+      authBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload();
+      });
+    } else {
+      authBtn.textContent = "로그인";
+      authBtn.addEventListener("click", () => {
+        window.location.href = "loginPage.html";
+      });
+    }
+
+    // 임시 데이터
+    const dreamData = [
+      {
+        title: "술집에 가는 꿈",
+        description: "타락하고 싶은 충동이 잠재해 있다는 뜻이다."
+      },
+      {
+        title: "철학관에 들어가 상담을 하는 꿈, 혹은 이와 비슷한 꿈",
+        description: "직장이나 사업 등에서 발생한 문제를 해결하기 위한 노력과 관련된 꿈이다."
+      },
+      {
+        title: "북한에서 방과 꿈을 꾸는 꿈",
+        description: "북한과의 평화 관련 일을 암시한다."
+      },
+      {
+        title: "출판사에서 인쇄물을 받는 꿈",
+        description: "새로운 사업에 대한 시작이나 큰 변화가 일어날 꿈이다."
+      },
+      {
+        title: "법원 또는 법정에 출두하거나 경찰 또는 사법기관의 조사를 받는 꿈",
+        description: "법적 또는 계약 문제와 연관이 있으며, 긍정적으로 풀린다면 큰 기회가 올 징조."
+      },
+      {
+        title: "고기와 관련된 꿈",
+        description: "경제적 풍요와 관련된 꿈."
+      },
+      {
+        title: "자신의 직업에 관한 꿈",
+        description: "현재의 직업에 대한 재평가와 성공을 암시한다."
+      },
+      {
+        title: "병원에서 의사에게 상담을 받는 꿈",
+        description: "건강 문제와 관련된 도움을 암시한다."
+      },
+      {
+        title: "장소와 관련된 장소에서 발생하는 꿈",
+        description: "상황 변화나 환경의 전환을 의미한다."
+      }
+      // 필요한 데이터 추가 가능...
+    ];
+
+    // 꿈 데이터 렌더링 함수
+    function renderDreams(data) {
+      const container = document.getElementById("dream-container");
+
+      data.forEach((dream) => {
+        const dreamDiv = document.createElement("div");
+        dreamDiv.classList.add("dream-box");
+        dreamDiv.innerHTML = `
+          <div class="dream-title">${dream.title}</div>
+          <div class="dream-description">${dream.description}</div>
+        `;
+        container.appendChild(dreamDiv);
+      });
+    }
+
+    // 데이터 렌더링 실행
+    renderDreams(dreamData);
+  </script>
+</body>
+</html>
